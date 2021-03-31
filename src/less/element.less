@@ -1,0 +1,172 @@
+.el-header {
+    height: auto !important;
+    padding: 0;
+}
+.route-content  {
+    padding: 0;
+}
+.el-main {
+    // max-width: 1000px;
+    margin: 0 auto;
+}
+// 修改默认btn
+.el-button--success.is-plain {
+    border: 2px solid @themeColor;
+    color: @themeColor;
+    background: transparent;
+    font-family: Poppins;
+}
+.el-button.is-circle {
+    padding: 10px;
+}
+.el-button--medium {
+    border-radius: .75rem;
+    font-size: 18px;
+}
+.el-button--danger {
+  background: #fd4040;
+  border: 1px solid #fd4040;
+}
+// 定制两种button
+.el-button.account-btn {
+    background: #fff;
+    color: #67c23a;
+    border: 1px solid #d9d9d9;
+  }
+  .el-button.is-plain.is-disabled {
+    background: #fff;
+    border-color: #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    border-width: 1px;
+    &:hover {
+      color: rgba(0,0,0,.25);
+      background: #fff;
+      border-color: #d9d9d9;
+    }
+  }
+// tabs
+.el-tabs__item {
+    font-size: 24px;
+    font-style: normal;
+    letter-spacing: .58px;
+    color: #0f1228;
+    margin-bottom: 10px;
+}
+.el-tabs__item.is-active {
+    font-style: normal;
+    letter-spacing: .583333px;
+    color: #0f1228;
+    font-weight: 700;
+}
+.el-table--border {
+    border: none;
+}
+.el-table--border th {
+    border-right: none
+}
+.el-table th.is-leaf {
+    border-bottom: none; 
+}
+.el-table td {
+    border-right: none
+}
+.el-tabs__item:hover {
+    color: #0f1228; 
+}
+.el-tabs__active-bar {
+    height: 4px;
+    background-color: @themeColor;
+}
+.el-tabs__nav-wrap::after {
+    display: none;
+}
+// 
+.el-collapse-item__header {
+    height: auto;
+    line-height:inherit;
+}
+.el-collapse {
+    border-top: none;
+    border-bottom: none;
+}
+.el-collapse-item__header {
+    border: none;
+}
+.el-collapse-item {
+    border: 1px solid #EBEEF5;
+}
+.el-collapse-item__wrap {
+    background-color: #f6f6f6;
+    padding: 20px 0 0;
+}
+//
+.el-input.is-active .el-input__inner, .el-input__inner:focus {
+    border-color: #C0C4CC;
+}
+.el-menu-vertical-demo .el-menu-item {
+    font-size: 26px;
+}
+.el-menu-item.is-active {
+    color: @themeColor;
+    font-weight: bold;
+}
+.el-menu-item:focus, .el-menu-item:hover {
+    background-color: transparent;
+}
+.van-skeleton__row {
+    border-radius: 10px;
+}  
+
+
+.custom-message {
+    font-size: 14px;
+    min-width: 200px;
+    padding: 10px 16px;
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  }
+  .loading-icon {
+    width: 20px;
+    height: 20px;
+    background: url('../assets/images/loading.png') no-repeat;
+    background-size: 100%;
+    margin-right: 10px;
+  }
+  @keyframes loadingCircle {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .animate-loading {
+    animation: loadingCircle 1s linear infinite;
+  }
+  .el-message .el-icon-error {
+    font-size: 16px;
+  }
+  .el-message__content {
+    line-height: inherit;
+  }
+  .notify-a {
+    margin-left: 2px;
+    &:hover {
+      text-decoration: underline;
+      color: #4caf50;
+    }
+  }
+
+  
+  @media only screen and (max-width: 767px) {
+    .custom-message {
+      min-width: calc(100vw - 36px);
+    }
+    .el-collapse-item__wrap{
+
+        padding: 20px 10px 0;
+    }
+  }
+  @media only screen and (min-width: 992px) {
+    .el-collapse-item__header {
+        padding: 0 10px;
+    }
+  }

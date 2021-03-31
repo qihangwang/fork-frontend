@@ -1,0 +1,87 @@
+.h-skeleton,.m-skeleton  {
+  padding: 0;
+}
+.s-skeleton .van-skeleton__row {
+    height: 18px;
+}
+// 骨架屏分为正常 高
+.m-skeleton .van-skeleton__row {
+    height: 32px;
+}
+//高一点的
+.h-skeleton .van-skeleton__row {
+    height: 60px;
+}
+.one-line-skeleton .van-skeleton__row{
+   width: 100% !important;
+   
+}
+
+
+// 从新整理media 
+.container {
+    max-width: 1500px;
+    margin: 60px auto;
+    padding: 0 18px;
+}
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+@media only screen and (max-width: 640px) {
+    .custom-tabs .el-tabs__nav{
+       width: 100%;
+       display: flex;
+    }
+    .custom-tabs .el-tabs__item {
+        flex: 1;
+        text-align: center;
+        margin-bottom: 4px;
+        font-size: 16px;
+        padding: 0;
+    }
+}
+@media (max-width: 767px) {
+   
+}
+@media (min-width: 768px) {
+    .header {
+        padding: 30px 3rem 0 3rem;
+    }
+    .card {
+      padding: 20px;
+    }
+}
+@media (max-width: 767px) { 
+    .container {
+        padding: 0 10px;
+        margin: 20px auto;
+    } 
+    .card  {
+        padding: 10px; 
+    }
+    .el-dialog__body {
+        padding: 20px;
+    }
+}
+@media  (min-width: 768px) and (max-width: 992px) {
+    .container {
+        padding: 0 20px;
+        margin: 30px auto;
+    }   
+}
+@media (min-width: 992px) {
+    .container {
+        padding: 0 20px;
+    } 
+}
+@media (min-width: 1024px) {
+    .container {
+        padding-right: 3rem;
+    }
+    .card {
+        padding: 30px;
+      }
+}

@@ -1,0 +1,2 @@
+import './clicks';
+// import './input';
