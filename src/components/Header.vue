@@ -18,7 +18,7 @@
         <template v-else>
           <el-button
             v-show="accountLoad && !NetErrorBtn"
-            type="success"
+            type="primary"
             size="medium"
             :class="{ 'account-btn': accounts && !netError }"
             @click="() => (visable = true)"

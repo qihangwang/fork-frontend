@@ -1,42 +1,55 @@
 <template>
   <div class="container">
     <div class="card con">
-      <div class="ant-img">
-        <img src="https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg" />
-      </div>
-      <p>Stay tuned, humans!</p>
+      <LargeSwitch :value.sync="SwitchState"/>
+      <el-row :gutter="15" type="flex" justify="start" class="farms-list">
+        <el-col v-for="item in FarmsList" :key="item.id" :xs="24" :sm="12" :lg="8" :xl="6">
+          <!-- 这里是组件 -->
+          <div class="base-card">
+            <FarmsCard />
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
+
+<script>
+import LargeSwitch from '@/components/LargeSwitch';
+import FarmsCard from '../components/farms/FarmsCard';
+export default {
+  name: 'Farm',
+  components: { FarmsCard, LargeSwitch },
+  data () {
+    return {
+      SwitchState: 0,
+      FarmsList: [{
+        id: 1
+      }, {
+        id: 2
+      }]
+    }
+  },
+  methods: {
+  }
+};
+</script>
+
 <style lang="less" scoped>
 .con {
-  .ant-img {
-    margin-top: 80px;
-    img {
-      width: 160px;
-      height: 160px;
-      margin: 0 auto;
-      display: block;
-      animation: bounce 1.5s infinite;
+  .farms-list{
+    display: flex;
+    padding: 20px 0;
+    flex-wrap: wrap;
+    .base-card {
+      background: #99a9bf;
+      min-width: 300px;
+      border-radius: 4px;
+      min-height: 36px;
+      text-align: center;
+      line-height: 1;
+      /*padding: 15px;*/
     }
-  }
-  p {
-    font-size: 20px;
-    text-align: center;
-    padding: 40px 0;
-  }
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(-25%);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-
-  50% {
-    transform: none;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
 </style>

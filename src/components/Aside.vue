@@ -10,9 +10,6 @@
     <el-menu-item index="/farm">
       <span slot="title">Farm</span>
     </el-menu-item>
-    <el-menu-item index="/earn">
-      <span slot="title">Eran</span>
-    </el-menu-item>
   </el-menu>
 </template>
 <script>

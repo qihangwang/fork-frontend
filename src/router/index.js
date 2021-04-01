@@ -20,11 +20,11 @@ const routes = [
     name: 'Farm',
     component: () => import('../views/Farm.vue'),
   },
-  {
-    path: '/earn',
-    name: 'Earn',
-    component: () => import('../views/Earn.vue'),
-  },
+  // {
+  //   path: '/earn',
+  //   name: 'Earn',
+  //   component: () => import('../views/Earn.vue'),
+  // },
   {
     path: '/earn/:tokenName/:type',
     name: 'Earn',
