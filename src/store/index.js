@@ -13,6 +13,7 @@ export default new Vuex.Store({
     wallet: '', //当前使用的钱包
     fromPage: location.pathname,
     toPage: location.pathname,
+    routeLoading: false, //全局loading
   },
   mutations: {
     setAccount(state, str) {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     },
     setNetError(state, boolen) {
       state.NetErrorBtn = boolen;
+    },
+    setLoadingState(state, val) {
+      state.routeLoading = val;
     },
   },
   actions: {

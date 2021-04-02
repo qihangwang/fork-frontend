@@ -49,7 +49,6 @@
                   <span>An error has occured</span>
                   <span>{{ connectErrorMessage }}</span>
                 </div>
-                <!-- <el-button size="mini" class="try" @click="tryAgain">Try Again</el-button> -->
               </template>
             </li>
           </ul>
@@ -59,7 +58,7 @@
         <div class="wallet-account">
           <div class="line-1">
             <span>Connected with {{ wallet }}</span>
-            <el-button type="success" size="mini" plain @click="changeAccount">change</el-button>
+            <el-button type="primary" size="mini" plain @click="changeAccount">change</el-button>
           </div>
           <div class="line-2">
             <p>{{ plusXing(account) }}</p>
@@ -122,7 +121,7 @@ export default {
       return this.$store.state.chainId;
     },
     chainIdStates() {
-      return this.$store.state.chainId == 56 || this.$store.state.chainId == 97;
+      return this.$store.state.chainId == process.env.VUE_APP_NETWORK_ID;
     },
     wallet() {
       return this.$store.state.wallet;
@@ -130,12 +129,12 @@ export default {
   },
   watch: {
     account(v) {
-      if (this.chainId == 56 || this.chainId == 97) {
+      if (this.chainId == process.env.VUE_APP_NETWORK_ID) {
         this.step = v ? 2 : 0;
       }
     },
     chainId(v) {
-      if (v == 56 || v == 97) {
+      if (v == process.env.VUE_APP_NETWORK_ID) {
         this.step = this.account ? 2 : 0;
       }
     },
@@ -158,7 +157,6 @@ export default {
     },
     // 连接小狐狸
     async connctMetamask() {
-      console.log(1);
       var accounts = await connect();
       if (accounts == false) {
         this.connectError = true;
@@ -169,20 +167,20 @@ export default {
         const chainId = await web3js.eth.getChainId();
         this.$store.dispatch('changeAccount', accounts[0]);
         this.$store.dispatch('changeChain', { key: 'chainId', val: chainId });
-        if (chainId !== 97 && chainId !== 56) {
+        if (chainId !== process.env.VUE_APP_NETWORK_ID && chainId !== process.env.VUE_APP_NETWORK_ID) {
           this.connectError = true;
           this.connectErrorMessage = `Unsupported chain id: ${chainId}. Supported chain ids are: 56,97.`;
-          console.log('连接成功将, chaid 错误');
+          console.log('connetc chaid error');
           return false;
         }
         this.$store.dispatch('changeWallet', this.currentWallet);
         this.close && this.close();
         this.connectError = false;
-        console.log('连接成功将要关闭弹窗');
+        console.log('connect success');
       } else {
         this.connectError = true;
         this.connectErrorMessage = 'The user rejected the request';
-        console.log('连接失败');
+        console.log('connect error');
       }
     },
     // 选择那个钱包
@@ -292,7 +290,7 @@ export default {
 }
 .back {
   cursor: pointer;
-  color: #04c19e;
+  color: @themeColor;
 }
 .loading-text {
   margin-left: 10px;

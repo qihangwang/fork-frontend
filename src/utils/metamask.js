@@ -42,7 +42,6 @@ function handleAccountsChanged(accounts) {
     store.dispatch('changeAccount', '');
     store.dispatch('changeWallet', '');
   } else if (accounts[0] !== currentAccount) {
-    // console.log('用户切换');
     // window.location.reload();
     store.dispatch('changeAccount', accounts[0]);
     store.dispatch('changeWallet', 'MetaMask');
@@ -52,10 +51,10 @@ function handleAccountsChanged(accounts) {
 // 节点发生改变
 function handleChainChanged(_chainId) {
   const chainId = eval(_chainId).toString(10);
-  if (store.state.chainId == 97 || store.state.chainId == 56) {
+  if (store.state.chainId == process.env.VUE_APP_NETWORK_ID) {
     store.commit('setNetError', true);
   }
-  if (chainId == 97 || chainId == 56) {
+  if (chainId == process.env.VUE_APP_NETWORK_ID) {
     store.commit('setNetError', false);
   }
   store.dispatch('changeChain', { key: 'chainId', val: chainId });
@@ -87,7 +86,6 @@ export async function connect() {
   }
 }
 
-// 呼气面版
 export async function requestPermissions() {
   if (typeof window.ethereum !== 'undefined') {
     const permissions = await window.ethereum
@@ -110,8 +108,6 @@ export async function requestPermissions() {
   }
   return false;
 }
-
-// 监听用户切换
 
 export default {
   checkProvider,

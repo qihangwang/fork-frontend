@@ -1,10 +1,10 @@
-import IERC20JSON from '../contract1/IERC20.json';
-import WBNBJSON from '../contract1/MockWBNB.json';
-import BUSDJSON from '../contract1/MockDai.json';
-import iBNBJSON from '../contract1/iBNB.json';
-import iBUSDJSON from '../contract1/iBUSD.json';
-import ForkTokenJSON from '../contract1/ForkToken.json';
-import IFairLaunchJSON from '../contract1/IFairLaunch.json';
+import IERC20JSON from '../contract/IERC20.json';
+import WBNBJSON from '../contract/MockWBNB.json';
+import BUSDJSON from '../contract/MockDai.json';
+import iBNBJSON from '../contract/iBNB.json';
+import iBUSDJSON from '../contract/iBUSD.json';
+import ForkTokenJSON from '../contract/ForkToken.json';
+import IFairLaunchJSON from '../contract/IFairLaunch.json';
 
 export default {
   UN2: {

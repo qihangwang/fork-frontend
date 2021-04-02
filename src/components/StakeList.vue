@@ -66,7 +66,7 @@
                       >
                     </el-input>
                     <el-button
-                      type="success"
+                      :type="(item.stake <= 0 || item.stakeInput <= 0) && item.status !== 0 ? 'info' : 'primary'"
                       :disabled="(item.stake <= 0 || item.stakeInput <= 0) && item.status !== 0"
                       @click="confirm(item, 'stake', index)"
                       plain
@@ -100,7 +100,7 @@
                       >
                     </el-input>
                     <el-button
-                      type="success"
+                      :type="item.unstakeInput <= 0 || item.status == 0 ? 'info' : 'primary'"
                       :disabled="item.unstakeInput <= 0 || item.status == 0"
                       @click="confirm(item, 'unstake', index)"
                       plain
@@ -115,7 +115,7 @@
                   <div class="line-title">Total Fork rewards:</div>
                   <div class="green total">{{ item.rewards.toFixed(2) }}</div>
                   <el-button
-                    type="success"
+                    :type="item.rewards <= 0 ? 'info' : 'primary'"
                     plain
                     size="medium"
                     @click="confirm(item, 'claim', index)"
@@ -260,7 +260,7 @@ export default {
       await this.getForks();
       this.timer = setTimeout(async () => {
         await this.getListInfo();
-      }, 5000);
+      }, 10000);
     },
     // 获取可质押池子的token余额 call
     async getStakeVal() {
@@ -431,6 +431,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.list {
+  margin-bottom: 20px;
+}
 .skeleton {
   margin-top: 20px;
 }
@@ -508,7 +511,7 @@ export default {
   margin-bottom: 20px;
 }
 .total {
-  font-size: 40px;
+  font-size: 36px;
   text-align: center;
 }
 .btn {

@@ -22,7 +22,7 @@
 .container {
     max-width: 1500px;
     margin: 60px auto;
-    padding: 0 18px;
+    padding: 0 2rem;
 }
 .card {
     background: #fff;
@@ -43,44 +43,36 @@
         padding: 0;
     }
 }
-@media (max-width: 767px) {
-   
-}
-@media (min-width: 768px) {
-    .header {
-        padding: 30px 3rem 0 3rem;
-    }
-    .card {
-      padding: 20px;
-    }
-}
+
 @media (max-width: 767px) { 
     .container {
-        padding: 0 10px;
+        padding: 0 16px;
         margin: 20px auto;
     } 
     .card  {
-        padding: 10px; 
+        padding: 30px 10px 10px; 
+        border-radius: 0;
+
     }
     .el-dialog__body {
         padding: 20px;
     }
 }
-@media  (min-width: 768px) and (max-width: 992px) {
-    .container {
-        padding: 0 20px;
-        margin: 30px auto;
-    }   
+
+@media (min-width: 768px) {
+    // .header {
+    //     padding: 30px 3rem 0 3rem;
+    // }
+    .card {
+      padding: 20px;
+    }
 }
+
 @media (min-width: 992px) {
-    .container {
-        padding: 0 20px;
-    } 
+
 }
 @media (min-width: 1024px) {
-    .container {
-        padding-right: 3rem;
-    }
+   
     .card {
         padding: 30px;
       }

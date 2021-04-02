@@ -1,28 +1,20 @@
 <!--
- * @Author: lenghui
- * @Description: 公共头 分为四类
+ * @Author: **
+ * @Description: common headaer component
 -->
 <template>
   <div :class="[{ white1: drawerVisable }]">
     <!-- pc heder -->
-    <div class="header pc-header hidden-sm-and-down">
-      <div :class="['header-icon']"></div>
-      <div class="header-title"><router-link to="/">FORK COIN</router-link></div>
+    <div class="header pc-header hidden-xs-only">
+      <div class="header-left">
+        <a href="/">
+          <img src="https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png" />
+          <span>ForkCoin</span>
+        </a>
+      </div>
       <div class="header-right">
-        <template v-if="path == '/'">
-          <el-button size="medium">Buy ALPACA</el-button>
-          <el-button type="success" size="medium" @click="link('/stake')">
-            Lanuch App
-          </el-button>
-        </template>
-        <template v-else>
-          <el-button
-            v-show="accountLoad && !NetErrorBtn"
-            type="success"
-            size="medium"
-            :class="{ 'account-btn': accounts && !netError }"
-            @click="() => (visable = true)"
-          >
+        <template>
+          <el-button v-show="accountLoad && !NetErrorBtn" type="primary" size="medium" @click="() => (visable = true)">
             {{ !netError && account ? account : 'Connect to a wallet' }}</el-button
           >
           <el-button v-show="accountLoad && NetErrorBtn" icon="el-icon-link" type="danger" size="medium"
@@ -31,22 +23,12 @@
         </template>
       </div>
     </div>
-    <!-- 手机ipad header home首页 -->
-    <div class="header  hidden-md-and-up" v-show="path == '/'">
-      <div :class="['header-icon header-icon-1']"></div>
-      <div class="header-title header-title1">
-        <router-link to="/">FORK<br />COIN</router-link>
-      </div>
-      <div class="header-right">
-        <el-button type="success" @click="() => link('/stake')" size="medium">Lanuch App</el-button>
-      </div>
-    </div>
-    <!-- 手机opad header 其余页面 -->
-    <div class="header-mobile hidden-md-and-up" v-show="path !== '/' && path !== ''">
-      <div class="flex row">
-        <div :class="['header-icon header-icon-1']"></div>
-        <div class="header-title header-title1">
-          <router-link to="/">FORK<br />COIN</router-link>
+    <!-- phone header -->
+    <div class="header-mobile hidden-sm-and-up">
+      <div class="row">
+        <div class="header-title">
+          <img src="https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png" />
+          <router-link to="/stake">FORK<br />COIN</router-link>
         </div>
         <div class="header-menu-btn">
           <el-button circle @click="drawerVisable = !drawerVisable">
@@ -59,16 +41,15 @@
         <ul class="nav-menu">
           <li :class="{ active: path.indexOf('stake') > -1 }"><router-link to="/stake">Stake</router-link></li>
           <li :class="{ active: path.indexOf('farm') > -1 }"><router-link to="/farm">Farm</router-link></li>
-          <li :class="{ active: path.indexOf('earn') > -1 }"><router-link to="/earn">Earn</router-link></li>
         </ul>
       </div>
       <div :class="['wallet transition-all', { 'trans-show': !drawerVisable, 'trans-hidden': drawerVisable }]">
         <el-button
           v-show="accountLoad && !NetErrorBtn"
-          type="success"
+          type="primary"
           plain
           size="medium"
-          :class="['margin-t', { 'account-btn': accounts && !netError }]"
+          class="margin-t"
           @click="() => connect()"
         >
           {{ !netError && account ? account : 'Connect to a wallet' }}
@@ -94,8 +75,7 @@ export default {
     return {
       visable: false,
       drawerVisable: false,
-      netError: false, // 不管用户是否登录 如果节点不匹配 不显示出用户名
-      accounts: '',
+      netError: false,
     };
   },
   async created() {
@@ -119,44 +99,34 @@ export default {
     loaded() {
       return this.$store.state.loaded;
     },
-    // 当从正确的节点切换到不对的节点 才会显示节点错误
     NetErrorBtn() {
       return this.$store.state.NetErrorBtn;
     },
   },
   watch: {
-    // 不能用计算属性做class绑定
-    account(v) {
-      this.accounts = v;
-      console.log(v)
-    },
     chainId(v) {
-      if (v == 56 || v == 97) {
+      if (v == process.env.VUE_APP_NETWORK_ID) {
         this.netError = false;
       }
     },
   },
   methods: {
-    // 正常获取到账号了
     async init() {
-      console.log('获取');
       const that = this;
       if (window.web3js) {
-        // 只有56 97才符合bsc
+        // first common get chainId
         const chainId = await web3js.eth.getChainId();
         that.$store.dispatch('changeChain', { key: 'chainId', val: chainId });
         web3js.eth.getAccounts((error, result) => {
           console.log(result, 'res');
           if (!error && result.length > 0) {
             that.$store.dispatch('changeAccount', result[0]);
-            that.accounts = result[0];
             that.$store.dispatch('changeWallet', 'MetaMask');
-          } //授权成功后result能正常获取到账号了
-          // this.accountLoad = true;
+          }
+
           this.$store.commit('setAccountLoad');
         });
       } else {
-        // this.accountLoad = true;
         this.$store.commit('setAccountLoad');
       }
     },
@@ -171,7 +141,6 @@ export default {
     },
     connect() {
       this.visable = true;
-      console.log(1111);
     },
     link(str) {
       this.$router.push({ path: str });
@@ -192,25 +161,30 @@ export default {
 .white {
   background: #fff;
 }
-.account-btn {
-  background: #fff;
-  color: #67c23a;
-}
 .header {
   display: flex;
   position: relative;
   align-items: center;
   z-index: 99;
   margin: auto;
-  padding: 30px 30px 0 30px;
+  // padding: 30px 30px 0 30px;
   z-index: 999;
 }
-.header-mobile {
-  padding: 30px 30px 0 30px;
-  text-align: center;
-  position: relative;
-  z-index: 999;
-  background: #ededf2;
+.header-left {
+  img {
+    width: 50px;
+    height: 50px;
+  }
+  a {
+    display: flex;
+    align-items: center;
+    color: #17adff;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  span {
+    margin-left: 10px;
+  }
 }
 .header-right {
   margin-left: auto;
@@ -218,27 +192,34 @@ export default {
   text-align: right;
   position: relative;
 }
-.header-icon {
-  width: 80px;
-  height: 80px;
-  margin-right: 30px;
-  cursor: pointer;
-  background: url('https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg') no-repeat;
-  background-size: 100% 100%;
+
+.header-mobile {
+  padding: 20px 16px 0;
+  text-align: center;
+  position: relative;
+  z-index: 999;
+  background: #ededf2;
 }
-.header-icon-1 {
-  width: 48px;
-  height: 48px;
-  margin-right: 10px;
+.row {
+  display: flex;
+  justify-content: space-between;
 }
+
 .header-title {
-  font-style: normal;
   font-weight: 700;
   letter-spacing: 0.58px;
-  font-size: 2rem;
-  color: @themeColor;
+  font-size: 18px;
+  color: #17adff;
   text-align: left;
   font-family: Poppins;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
 }
 .header-menu-btn {
   vertical-align: middle;
@@ -250,15 +231,6 @@ export default {
     }
   }
 }
-
-.row {
-  justify-content: flex-end;
-  .header-title {
-    flex: 1;
-    align-self: center;
-  }
-}
-//
 .menu-icon {
   width: 24px;
   height: 24px;
@@ -317,43 +289,12 @@ export default {
   margin-top: 10px;
 }
 
-.pc-header {
-  padding: 30px 20px 0 20px;
-  padding-right: 3rem;
-}
-@media (max-width: 640px) {
-  .header-title1 {
-    font-size: 1.5rem;
-  }
-}
-
 @media only screen and (max-width: 767px) {
-  .header,
-  .header-mobile {
-    padding: 20px 10px;
-  }
-  .header-icon {
-    width: 50px;
-    height: 50px;
-    margin-right: 4px;
-  }
-  .header-title {
-    font-size: 20px;
-    line-height: 20px;
-  }
 }
 
-@media (max-width: 992px) {
-  .header-title1 {
-    font-size: 1.125rem;
-    line-height: 113%;
+@media (min-width: 768px) {
+  .header {
+    padding: 30px 2rem 0;
   }
-  .pc-header {
-    padding-right: 20px;
-  }
-  // .header-title {
-  //   font-size: 30px;
-  //   line-height: 30px;
-  // }
 }
 </style>

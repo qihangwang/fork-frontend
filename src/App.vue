@@ -5,7 +5,7 @@
         <Header />
       </el-header>
       <el-container v-show="accountLoad">
-        <el-aside width="200px" class="hidden-sm-and-down" v-if="path !== '/'">
+        <el-aside width="180px" class="hidden-xs-only">
           <Aside :path="path" />
         </el-aside>
         <el-main class="route-content">

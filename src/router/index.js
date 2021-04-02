@@ -6,11 +6,6 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue'),
-  },
-  {
     path: '/stake',
     name: 'Stake',
     component: () => import('../views/Stake.vue'),
@@ -21,19 +16,9 @@ const routes = [
     component: () => import('../views/Farm.vue'),
   },
   {
-    path: '/earn',
-    name: 'Earn',
-    component: () => import('../views/Earn.vue'),
+    path: '*',
+    redirect: { name: 'Stake' },
   },
-  {
-    path: '/earn/:tokenName/:type',
-    name: 'Earn',
-    component: () => import('../views/EarnInfo.vue'),
-  },
-  // {
-  //   path: "*",
-  //   redirect: { name: "Home" }
-  // }
 ];
 
 const router = new VueRouter({

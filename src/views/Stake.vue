@@ -2,45 +2,48 @@
   <div class="stake container">
     <div class="card">
       <p class="title">Your rewards summary</p>
-      <el-row :type="clientWidth >= 992 ? 'flex' : ''" justify="space-around">
-        <el-col :md="11" :sm="24" class="card-con card-flex">
-          <div class="card-con-left">
-            <div class="earn-title">ALPACA earned :</div>
-            <div>
-              <van-skeleton class="h-skeleton" :row="1" :loading="totalSkeletonLoading" row-width="180">
-                <span class="earn-count">{{ total }}</span>
-              </van-skeleton>
+      <el-row :gutter="20" :type="clientWidth >= 992 ? 'flex' : ''" justify="space-around">
+        <el-col :md="12" :sm="24">
+          <div class="card-con card-flex">
+            <div class="card-con-left">
+              <div class="earn-title">ALPACA earned :</div>
+              <div>
+                <van-skeleton class="h-skeleton" :row="1" :loading="totalSkeletonLoading" row-width="180">
+                  <span class="earn-count">{{ total }}</span>
+                </van-skeleton>
+              </div>
             </div>
-          </div>
-          <div class="card-con-right">
-            <img src="https://img.bee-cdn.com/large/3b9ae203lz1gonuqmoctjj207208mq35.jpg" />
+            <div class="card-con-right">
+              <img src="https://i.loli.net/2021/04/02/FgLazD7Z3clnHKM.png" />
+            </div>
           </div>
         </el-col>
-        <el-col :md="11" :sm="24" :class="['card-con card-con-padding']">
-          <div class="flex">
-            <span class="icon wallet-icon" />
-            <div>
-              <div class="ti">Your ALPACA wallet balance :</div>
-              <!-- <div class="count green">0</div> -->
-              <van-skeleton class="h-skeleton" :row="1" :loading="skeletonLoading" row-width="180">
-                <div class="count green">{{ walletMoney }}</div>
-              </van-skeleton>
-            </div>
-          </div>
-          <div class="flex">
-            <div>
-              <span class="icon lock-icon" />
-            </div>
-            <div>
-              <div class="ti">
-                Locked amount :
-                <van-skeleton class="m-skeleton" :row="1" :loading="skeletonLoading">
-                  <span class="green lock-count">{{ walletLock }}</span>
+        <el-col :md="12" :sm="24">
+          <div :class="['card-con']">
+            <div class="flex">
+              <span class="icon wallet-icon" />
+              <div>
+                <div class="ti">Your ALPACA wallet balance :</div>
+                <!-- <div class="count green">0</div> -->
+                <van-skeleton class="h-skeleton" :row="1" :loading="skeletonLoading" row-width="180">
+                  <div class="count green">{{ walletMoney }}</div>
                 </van-skeleton>
-                <!-- <span class="green lock-count">0</span> -->
               </div>
-              <div class="info">
-                your locked balance will be available after 1 month: <a class="green">detail here</a>
+            </div>
+            <div class="flex lock">
+              <div>
+                <span class="icon lock-icon" />
+              </div>
+              <div>
+                <div class="ti">
+                  Locked amount :
+                  <van-skeleton class="m-skeleton" :row="1" :loading="skeletonLoading">
+                    <span class="green lock-count">{{ walletLock }}</span>
+                  </van-skeleton>
+                </div>
+                <div class="info">
+                  your locked balance will be available after 1 month: <a class="green">detail here</a>
+                </div>
               </div>
             </div>
           </div>
@@ -171,43 +174,45 @@ export default {
 .card-flex {
   display: flex;
   justify-content: space-between;
-  background: linear-gradient(108.1deg, #2dea8f, @themeColor 48.54%, #1da765);
+  background: linear-gradient(108deg, #04abf67a, @themeColor 48.54%, #e2e2e2);
   color: #f2f2f2;
 }
 .card-con {
   margin: 10px 0;
-  padding: 62px 0;
-  border-radius: 0.75rem;
+  padding: 60px 16px;
+  border-radius: 10px;
   position: relative;
   border: 1px solid #f0f0f0;
   overflow: hidden;
+  height: 100%;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   .card-con-left {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-height: 210px;
   }
   .earn-title {
-    font-size: 12px;
+    font-size: 18px;
+    margin-bottom: 6px;
   }
   .earn-count {
     font-size: 1.875rem;
+    z-index: 1000;
+    position: relative;
   }
   .card-con-right {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
     img {
-      width: 8rem;
+      width: 7rem;
       display: block;
       position: absolute;
       bottom: 0;
     }
   }
-}
-.card-con-padding {
-  padding: 30px 16px;
 }
 .card-con-left {
   padding-left: 20px;
@@ -236,6 +241,9 @@ export default {
 .count {
   font-size: 30px;
 }
+.lock {
+  margin-top: 20px;
+}
 .lock-count {
   margin-left: 0.5rem;
   font-size: 1rem;
@@ -246,6 +254,20 @@ export default {
   max-width: 260px;
 }
 
+@media only screen and (max-width: 767px) {
+  .card-con .card-con-left {
+    padding-left: 0px;
+  }
+  .card-con .card-con-right img {
+    width: 5rem;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .card-con .card-con-left {
+    min-height: 160px;
+  }
+}
 @media only screen and (min-width: 992px) {
   .title {
     font-size: 24px;
@@ -253,7 +275,6 @@ export default {
     margin-bottom: 10px;
   }
   .card-con {
-    padding: 80px 0;
     .earn-title {
       font-size: 18px;
     }
@@ -261,15 +282,12 @@ export default {
       font-size: 50px;
       font-weight: bold;
     }
-    .card-con-right img {
-      width: 10rem;
-    }
-  }
-  .card-con-padding {
-    padding: 80px 16px;
+    // .card-con-right img {
+    //   width: 10rem;
+    // }
   }
   .ti {
-    font-size: 20px;
+    font-size: 18px;
   }
   .count {
     font-size: 50px;
@@ -283,6 +301,11 @@ export default {
   }
   .lock-icon {
     margin-top: 5px;
+  }
+}
+@media only screen and (min-width: 1200px)  {
+ .card-con .card-con-right img {
+    width: 9rem;
   }
 }
 </style>

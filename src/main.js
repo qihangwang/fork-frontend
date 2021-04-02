@@ -4,12 +4,14 @@ import router from './router';
 import store from './store';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/display.css';
+import vuePlugin from './utils/vuePlugin';
 import './App.less';
 import './directive';
 import { Skeleton } from 'vant';
 
 Vue.use(Skeleton);
 Vue.use(ElementUI);
+Vue.use(vuePlugin);
 
 Vue.config.productionTip = false;
 
