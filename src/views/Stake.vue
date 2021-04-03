@@ -6,7 +6,7 @@
         <el-col :md="12" :sm="24">
           <div class="card-con card-flex">
             <div class="card-con-left">
-              <div class="earn-title">ALPACA earned :</div>
+              <div class="earn-title">Fork earned :</div>
               <div>
                 <van-skeleton class="h-skeleton" :row="1" :loading="totalSkeletonLoading" row-width="180">
                   <span class="earn-count">{{ total }}</span>
@@ -24,7 +24,6 @@
               <span class="icon wallet-icon" />
               <div>
                 <div class="ti">Your ALPACA wallet balance :</div>
-                <!-- <div class="count green">0</div> -->
                 <van-skeleton class="h-skeleton" :row="1" :loading="skeletonLoading" row-width="180">
                   <div class="count green">{{ walletMoney }}</div>
                 </van-skeleton>
@@ -50,7 +49,6 @@
         </el-col>
       </el-row>
     </div>
-    <!-- 操作部分 -->
     <div class="card card-margin">
       <StakeList ref="child" @change="changeEarn" />
     </div>
@@ -81,14 +79,11 @@ export default {
     account() {
       return this.$store.state.account;
     },
-    chainId() {
-      return this.$store.state.chainId;
-    },
   },
   watch: {
     account(v) {
       if (v) {
-        if (this.chainId == 56 || this.chainId == 97) {
+        if (!this.chainIdError) {
           this.init();
         }
       } else {
@@ -97,8 +92,8 @@ export default {
         this.total = 'N/A';
       }
     },
-    chainId(v) {
-      if (v == 56 || v == 97) {
+    chainIdError(status) {
+      if (!status) {
         if (this.account) {
           this.init();
         }
@@ -137,7 +132,7 @@ export default {
       await this.getFork();
       this.skeletonLoading = false;
     },
-    // 获取赚到的fork 币
+    // get earn fork
     async getFork() {
       const current = this.contracts.Fork;
       let contract = new Contract(current.abi, current.address, current.name);
@@ -154,7 +149,7 @@ export default {
       //   await this.getFork();
       // }, 5000);
     },
-    // 计算总earn
+    // compute total
     changeEarn(val) {
       this.total = val.toFixed(2);
       this.totalSkeletonLoading = false;
@@ -199,7 +194,7 @@ export default {
   }
   .earn-count {
     font-size: 1.875rem;
-    z-index: 1000;
+    z-index: 9;
     position: relative;
   }
   .card-con-right {
@@ -282,9 +277,6 @@ export default {
       font-size: 50px;
       font-weight: bold;
     }
-    // .card-con-right img {
-    //   width: 10rem;
-    // }
   }
   .ti {
     font-size: 18px;
@@ -303,8 +295,8 @@ export default {
     margin-top: 5px;
   }
 }
-@media only screen and (min-width: 1200px)  {
- .card-con .card-con-right img {
+@media only screen and (min-width: 1200px) {
+  .card-con .card-con-right img {
     width: 9rem;
   }
 }

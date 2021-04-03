@@ -1,6 +1,6 @@
 <!--
- * @Author: lenghui
- * @Description: 移动端和pc端 stake操作 需要和钱包交互
+ * @Author: **
+ * @Description: stake pools
 -->
 <template>
   <div>
@@ -143,63 +143,35 @@ export default {
   },
   data() {
     return {
-      val: '',
       skeletonLoading: true,
+      poolsLength: 0,
       contracts,
       list: [
-        {
-          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
-          name: 'Fork-WBNB LP token',
-          contract: 'UN2',
-          status: 0,
-          imgs: [
-            'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png',
-            'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-          ],
-          apy: '1000%',
-          quota: 0,
-          quotaInput: 0,
-          stake: 0,
-          stakeInput: '',
-          unstake: 0,
-          unstakeInput: '',
-          rewards: 0,
-        },
-        {
-          title: 'Stake iBNB  to earn Fork rewards',
-          name: 'iBNB',
-          contract: 'iBNB',
-          status: 1,
-          imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
-          apy: '1000%',
-          quota: 0,
-          stake: 0,
-          stakeInput: '',
-          unstake: 0,
-          unstakeInput: '',
-          rewards: 0,
-        },
-        {
-          title: 'Stake iBUSD to earn Fork rewards',
-          name: 'iBUSD',
-          contract: 'iBUSD',
-          status: 0,
-          imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
-          apy: '1000%',
-          quota: 0,
-          stake: 0,
-          stakeInput: '',
-          unstake: 0,
-          unstakeInput: '',
-          rewards: 0,
-        },
+        // {
+        //   title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
+        //   name: 'Fork-WBNB LP token',
+        //   contract: 'UN2',
+        //   status: 0,
+        //   imgs: [
+        //     'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png',
+        //     'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
+        //   ],
+        //   apy: '1000%',
+        //   quota: 0,
+        //   quotaInput: 0,
+        //   stake: 0,
+        //   stakeInput: '',
+        //   unstake: 0,
+        //   unstakeInput: '',
+        //   rewards: 0,
+        // },
       ],
       totalEarn: 0,
       timer: null,
     };
   },
   created() {
-    if (this.account && this.chainId) {
+    if (this.account && !this.chainIdError) {
       this.init();
     }
   },
@@ -213,26 +185,27 @@ export default {
     account() {
       return this.$store.state.account;
     },
-    chainId() {
-      return this.$store.state.chainId;
-    },
   },
+  // Clear the timer when changes account or chain
   watch: {
     account(v) {
+      this.skeletonLoading = true;
       if (v) {
-        this.skeletonLoading = true;
-        if (this.chainId == 56 || this.chainId == 97) {
+        this.timer && clearTimeout(this.timer);
+        if (!this.chainIdError) {
           this.init();
         }
       }
     },
-    chainId(v) {
-      if (v == 56 || v == 97) {
+    chainIdError(status) {
+      this.timer && clearTimeout(this.timer);
+      if (!status) {
         if (this.account) {
           this.init();
         }
       } else {
         this.skeletonLoading = true;
+        this.totalSkeletonLoading = true;
       }
     },
   },
@@ -245,89 +218,155 @@ export default {
       }
     },
     async init() {
-      await this.checkAllowance();
       this.skeletonLoading = true;
-      if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
-      }
-      await this.getListInfo();
+      // if (this.timer) {
+      //   clearTimeout(this.timer);
+      //   this.timer = null;
+      // }
+      // await this.checkAllowance();
+      // await this.getListInfo();
+      await this.getPools();
+      await this.getStake();
+      await this.getPool();
+      this.update();
       this.skeletonLoading = false;
     },
-    async getListInfo() {
-      await this.getStakeVal();
-      await this.getUnstakeVal();
-      await this.getForks();
+    // The timer updates data every 10s
+    async update() {
+      console.log(new Date().getSeconds());
       this.timer = setTimeout(async () => {
-        await this.getListInfo();
+        await this.getStake();
+        await this.getPool();
+        console.log(new Date().getSeconds());
+        this.update();
       }, 10000);
     },
-    // 获取可质押池子的token余额 call
+    // first: get pools
+    async getPools() {
+      const that = this;
+      const current = this.contracts.IFairLaunch;
+      const contract = new Contract(current.abi, current.address, current.name);
+      // try {
+      await contract.call('poolLength', false, function(err, res) {
+        if (!err) {
+          that.poolsLength = res;
+        }
+      });
+      // }
+      //  catch {
+      //   console.log('error');
+      // }
+      let arr = [];
+      for (let i = 0; i < this.poolsLength; i++) {
+        await contract.call('poolInfo', i, function(err, res) {
+          if (!err) {
+            const obj = {
+              title: 'Stake iBUSD to earn Fork rewards', //title
+              name: 'FORK',
+              status: 0, // 是否授权
+              imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'], //icon
+              apy: '1000%', //回报
+              tokenAdress: res.stakeToken, // 左边可质押的合约地址
+              stake: 0, //左边还可以质押了多少
+              stakeInput: '',
+              unstake: 0, //右边还可以解押了多少
+              unstakeInput: '',
+              rewards: 0, //奖励
+            };
+            arr.push(obj);
+          }
+        });
+      }
+      this.list = arr;
+    },
+    // second: Get information about the stake token
+    async getStake() {
+      await this.checkAllowance();
+      await this.getStakeVal();
+    },
+    // get stake allowance
+    async checkAllowance() {
+      const that = this;
+      const pools = this.contracts.IFairLaunch;
+      for (let index = 0; index < this.poolsLength; index++) {
+        const contract = new Contract(
+          this.contracts['ERC20'].abi,
+          this.list[index].tokenAdress,
+          this.contracts['ERC20'].name,
+        );
+        const res = await contract.allowance(this.account, pools.address, function(err, result) {
+          if (!err) {
+            const approveVal = Number(web3js.utils.fromWei(result, 'ether'));
+            // console.log(approveVal, index, 'approveVal');
+            return approveVal;
+          } else {
+            return 0;
+          }
+        });
+        if (res == 0 || !res) {
+          that.list[index].status = 0;
+        } else {
+          that.list[index].status = 1;
+        }
+      }
+    },
+    // get stake quota
     async getStakeVal() {
-      const tokens = ['UN2', 'iBNB', 'iBUSD'];
-      const contracts = [];
-      for (let key of tokens) {
-        let item = this.contracts[key];
-        contracts.push(new Contract(item.abi, item.address, item.name));
-      }
-      for (let i = 0; i < contracts.length; i++) {
-        const quota = await contracts[i].getBalance(this.account, contracts[i].address);
-        console.log(web3js.utils.fromWei(quota, 'ether'), 'ether');
-        this.list[i].stake = web3js.utils.fromWei(quota, 'ether');
-      }
-    },
-    // 获取三个池子里已经质押的token call
-    async getUnstakeVal() {
-      try {
-        const that = this;
-        const pool = this.contracts.IFairLaunch;
-        const contract = new Contract(pool.abi, pool.address, pool.name);
-        for (let i = 0; i < 3; i++) {
-          await contract.call('userInfo', [i, this.account], { from: this.account }, function(err, res) {
-            if (!err) {
-              console.log(web3js.utils.fromWei(res.amount, 'ether'), 'unstakeVal');
-              that.list[i].unstake = web3js.utils.fromWei(res.amount, 'ether');
-            }
-          });
+      for (let i = 0; i < this.poolsLength; i++) {
+        const tokenAdress = this.list[i].tokenAdress;
+        const contract = new Contract(this.contracts['ERC20'].abi, tokenAdress, this.contracts['ERC20'].name);
+        const res = await contract.getBalance(this.account, tokenAdress);
+        if (res) {
+          this.list[i].stake = web3js.utils.fromWei(res, 'ether');
+          // console.log('stake', i, web3js.utils.fromWei(res, 'ether'));
         }
-      } catch (err) {
-        console.log(err);
       }
     },
-    // 获取三个池子里的奖励 call
-    async getForks() {
-      try {
-        const that = this;
-        that.totalEarn = 0;
-        const pool = this.contracts.IFairLaunch;
-        const contract = new Contract(pool.abi, pool.address, pool.name);
-        for (let i = 0; i < 3; i++) {
-          await contract.call('pendingAlpaca', [i, this.account], { from: this.account }, function(err, res) {
-            if (!err) {
-              const item = that.list[i];
-              item.rewards = Number(web3js.utils.fromWei(res, 'ether'));
-              that.totalEarn += item.rewards;
-            }
-          });
+    // third: Get information about the pool
+    async getPool() {
+      await this.getUnStakeVal();
+      await this.getForkReward();
+    },
+    async getUnStakeVal() {
+      const pool = this.contracts.IFairLaunch;
+      const contract = new Contract(pool.abi, pool.address, pool.name);
+      for (let i = 0; i < this.poolsLength; i++) {
+        const res = await contract.call('userInfo', [i, this.account], { from: this.account });
+        if (res) {
+          this.list[i].unstake = web3js.utils.fromWei(res.amount, 'ether');
+          // console.log('unstake', i, web3js.utils.fromWei(res.amount, 'ether'));
         }
-        that.$emit('change', that.totalEarn);
-      } catch (err) {
-        console.log(err);
       }
     },
-    // 需要先进行授权 callback是通用弹出第二个弹窗
+    async getForkReward() {
+      const that = this;
+      that.totalEarn = 0;
+      const pool = this.contracts.IFairLaunch;
+      const contract = new Contract(pool.abi, pool.address, pool.name);
+      for (let i = 0; i < this.poolsLength; i++) {
+        await contract.call('pendingAlpaca', [i, this.account], { from: this.account }, function(err, res) {
+          if (!err) {
+            const item = that.list[i];
+            item.rewards = Number(web3js.utils.fromWei(res, 'ether'));
+            // console.log('reward', i, web3js.utils.fromWei(res, 'ether'));
+            that.totalEarn += item.rewards;
+          }
+        });
+      }
+      that.$emit('change', that.totalEarn);
+    },
+    // approve
     async approve(item) {
-      let res = await common(this.approveFn, item.contract);
+      let res = await common(this.approveFn, item.tokenAdress);
       if (res) {
         item.status = 1;
       }
     },
-    async approveFn(callback, name) {
+    async approveFn(callback, address) {
       const p = 'ether',
         quota = web3js.utils.toWei('100000000000000000', p); //授权额度
-      const item = this.contracts[name];
       const target = this.contracts.IFairLaunch;
-      const contract = new Contract(item.abi, item.address);
+      const contract = new Contract(this.contracts['ERC20'].abi, address, this.contracts['ERC20'].name);
       return contract.approve(target.address, quota, { from: this.account }, function(err, res) {
         if (!err) {
           console.log('授权成功');
@@ -335,36 +374,7 @@ export default {
         }
       });
     },
-    // 获取三个池子里是否授权
-    async checkAllowance() {
-      const that = this;
-      const pools = this.contracts.IFairLaunch;
-      let index = 0;
-      const tokens = ['UN2', 'iBNB', 'iBUSD'];
-      for (let key of tokens) {
-        const contract = new Contract(this.contracts[key].abi, this.contracts[key].address, this.contracts[key].name);
-        const res = await contract.allowance(this.account, pools.address, function(err, result) {
-          if (!err) {
-            const approveVal = Number(web3js.utils.fromWei(result, 'ether'));
-            console.log(approveVal, 'approveVal');
-            return approveVal;
-          } else {
-            return 0;
-          }
-        });
-        if (res == 0 || !res) {
-          // 未授权就不进行实时轮询结果
-          if (that.timer) {
-            clearInterval(that.timer);
-          }
-          that.list[index].status = 0;
-        } else {
-          that.list[index].status = 1;
-        }
-        index++;
-      }
-    },
-    // 按钮操作 approve stake unstake
+    // confirm edit type : approve stake unstake harvest
     async confirm(item, type, index) {
       if (item.status == 0) {
         return this.approve(item);
@@ -373,11 +383,13 @@ export default {
         let res = await common(this.deposit, item.stakeInput, index);
         if (res) {
           item.stake = item.stake - item.stakeInput;
+          item.stakeInput = '';
         }
       } else if (type == 'unstake') {
         let res = await common(this.withdraw, item.unstakeInput, index);
         if (res) {
-          item.stake = item.unstake - item.unstakeInput;
+          item.unstake = item.unstake - item.unstakeInput;
+          item.unstakeInput = '';
         }
       } else {
         let res = await common(this.getRewards, index);
@@ -386,43 +398,37 @@ export default {
         }
       }
     },
-    // stake
-    async deposit(callback, val, index) {
-      const that = this;
+    // operating deposit token
+    deposit(callback, val, index) {
       const current = this.contracts.IFairLaunch;
       const amount = web3js.utils.toWei(String(val), 'ether');
       const contract = new Contract(current.abi, current.address, current.name);
       return contract.send('deposit', [index, amount], { from: this.account }, function(err, res) {
         if (!err) {
-          console.log('存款成功', res);
-          that.list[index].stake = that.list[index].stake - val;
+          console.log('get deposit sucess', res);
           callback(res);
         }
       });
     },
-    // unstake
-    async withdraw(callback, val, index) {
-      const that = this;
+    // operating withdraw token
+    withdraw(callback, val, index) {
       const current = this.contracts.IFairLaunch;
       const amount = web3js.utils.toWei(String(val), 'ether');
       const contract = new Contract(current.abi, current.address);
       return contract.send('withdraw', [index, amount], { from: this.account }, function(err, res) {
         if (!err) {
-          console.log('取款成功', res);
-          that.list[index].unstake = that.list[index].unstake - val;
+          console.log('get widtdraw sucess', res);
           callback(res);
         }
       });
     },
-    // harvest
+    // operating harvest token
     getRewards(callback, index) {
-      const that = this;
       const current = this.contracts.IFairLaunch;
       const contract = new Contract(current.abi, current.address);
       return contract.send('harvest', index, { from: this.account }, function(err, res) {
         if (!err) {
-          console.log('获取奖励成功', res);
-          that.list[index].rewards = 0;
+          console.log('get reward suncess', res);
           callback(res);
         }
       });
