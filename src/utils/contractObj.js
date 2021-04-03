@@ -6,7 +6,25 @@ import iBUSDJSON from '../contract/iBUSD.json';
 import ForkTokenJSON from '../contract/ForkToken.json';
 import IFairLaunchJSON from '../contract/IFairLaunch.json';
 
+const EXPLORER_CONTRACT = {
+  56: {
+    URLS: 'https://bscscan.com',
+    FORK: '0x3C949Faa8Bd48371d42F25435D5777875D76dCD2',
+    MOON: '0x625D92a51B9C18bA76912fc7dE7456Dea5ee1E84',
+  },
+  97: {
+    URLS: 'https://testnet.bscscan.com',
+    FORK: '0x3C949Faa8Bd48371d42F25435D5777875D76dCD2',
+    MOON: '0x625D92a51B9C18bA76912fc7dE7456Dea5ee1E84',
+  },
+};
+
+const networkId = process.env.VUE_APP_NETWORK_ID;
+
 export default {
+  MOONPOOL: {
+    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['MOON'] : '',
+  },
   UN2: {
     address: '0x625D92a51B9C18bA76912fc7dE7456Dea5ee1E84',
     abi: IERC20JSON,
@@ -32,9 +50,14 @@ export default {
     abi: iBUSDJSON,
     name: 'iBUSD',
   },
+  ERC20: {
+    address: '0x625D92a51B9C18bA76912fc7dE7456Dea5ee1E84',
+    abi: IERC20JSON,
+    name: 'ERC',
+  },
   Fork: {
     abi: ForkTokenJSON,
-    address: '0x3C949Faa8Bd48371d42F25435D5777875D76dCD2',
+    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['FORK'] : '',
     name: 'Fork',
   },
   IFairLaunch: {

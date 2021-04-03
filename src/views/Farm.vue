@@ -1,42 +1,58 @@
 <template>
   <div class="container">
-    <div class="card con">
-      <div class="ant-img">
-        <img src="https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg" />
-      </div>
-      <p>Stay tuned, humans!</p>
+    <div class="card">
+      <LargeSwitch :value.sync="SwitchState" />
+      <FarmsCard :type="SwitchState" />
+      <!-- <div class="list">
+        <van-skeleton :row="8" class="m-skeleton skeleton" :loading="true">
+          <el-row :gutter="20">
+            <el-col v-for="item in FarmsList" :key="item.id" :md="12" :sm="24">
+              <div class="base-card">
+                <FarmsCard :data="item" />
+              </div>
+            </el-col>
+          </el-row>
+        </van-skeleton>
+      </div> -->
     </div>
   </div>
 </template>
+<script>
+import LargeSwitch from '@/components/LargeSwitch';
+import FarmsCard from '@/components/FarmsCard';
+export default {
+  name: 'Farm',
+  components: { FarmsCard, LargeSwitch },
+  data() {
+    return {
+      SwitchState: 0,
+      FarmsList: [
+        // {
+        //   id: 1,
+        //   icon: 'https://pancakeswap.finance/images/farms/cake-bnb.svg',
+        //   title: 'CAKE-BNB',
+        //   apr: '85.812',
+        //   earn: 'CAKE',
+        //   earned: 0,
+        //   total: '694,471,471',
+        //   link: [
+        //     {
+        //       name: 'google',
+        //       url: 'https://www.google.com',
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: 2,
+        // },
+      ],
+    };
+  },
+  methods: {},
+};
+</script>
 <style lang="less" scoped>
-.con {
-  .ant-img {
-    margin-top: 80px;
-    img {
-      width: 160px;
-      height: 160px;
-      margin: 0 auto;
-      display: block;
-      animation: bounce 1.5s infinite;
-    }
-  }
-  p {
-    font-size: 20px;
-    text-align: center;
-    padding: 40px 0;
-  }
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(-25%);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-
-  50% {
-    transform: none;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
+// .list {
+//   margin-top: 30px;
+// }
 </style>
