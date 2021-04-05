@@ -5,8 +5,10 @@
 <template>
   <div>
     <p class="title">
-      <van-skeleton class="m-skeleton" :row="1" :row-width="30" :loading="skeletonLoading">3</van-skeleton> Available
-      staking Opportunities
+      <van-skeleton class="m-skeleton" :row="1" :row-width="30" :loading="skeletonLoading">{{
+        poolsLength
+      }}</van-skeleton>
+      Available staking Opportunities
     </p>
     <div class="list">
       <van-skeleton :row="6" class="m-skeleton skeleton" :loading="skeletonLoading">
@@ -135,6 +137,7 @@
 <script>
 import Contract from '@/utils/contract';
 import { common } from '@/utils/common';
+import { getPoolApy } from '@/utils/common';
 import contracts from '@/utils/contractObj';
 export default {
   name: 'StakeList',
@@ -165,6 +168,28 @@ export default {
         //   unstakeInput: '',
         //   rewards: 0,
         // },
+      ],
+      priceData: {},
+      // 替换文字图片
+      infoList: [
+        {
+          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
+          name: 'Fork-WBNB LP token',
+          imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
+        },
+        {
+          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
+          name: 'Fork-WBNB LP toke1n',
+          imgs: [
+            'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
+            'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
+          ],
+        },
+        {
+          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
+          name: 'Fork-WBNB LP token',
+          imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
+        },
       ],
       totalEarn: 0,
       timer: null,
@@ -217,14 +242,15 @@ export default {
         item.stakeInput = Number(val) >= Number(item.stake) ? item.stake : val;
       }
     },
+    async getPrice() {
+      const res = await this.$axios({
+        method: 'get',
+        url: 'https://api.pancakeswap.com/api/v1/price',
+      });
+      this.priceData = res.data.prices;
+    },
     async init() {
       this.skeletonLoading = true;
-      // if (this.timer) {
-      //   clearTimeout(this.timer);
-      //   this.timer = null;
-      // }
-      // await this.checkAllowance();
-      // await this.getListInfo();
       await this.getPools();
       await this.getStake();
       await this.getPool();
@@ -246,26 +272,25 @@ export default {
       const that = this;
       const current = this.contracts.IFairLaunch;
       const contract = new Contract(current.abi, current.address, current.name);
-      // try {
-      await contract.call('poolLength', false, function(err, res) {
-        if (!err) {
-          that.poolsLength = res;
-        }
-      });
-      // }
-      //  catch {
-      //   console.log('error');
-      // }
+      try {
+        await contract.call('poolLength', false, function(err, res) {
+          if (!err) {
+            that.poolsLength = res;
+          }
+        });
+      } catch {
+        console.log('error');
+      }
       let arr = [];
       for (let i = 0; i < this.poolsLength; i++) {
         await contract.call('poolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
-              title: 'Stake iBUSD to earn Fork rewards', //title
-              name: 'FORK',
+              title: that.infoList[i].title, //title
+              name: that.infoList[i].name,
               status: 0, // 是否授权
-              imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'], //icon
-              apy: '1000%', //回报
+              imgs: that.infoList[i].imgs, //icon
+              apy: '0%', //回报
               tokenAdress: res.stakeToken, // 左边可质押的合约地址
               stake: 0, //左边还可以质押了多少
               stakeInput: '',
@@ -348,12 +373,25 @@ export default {
           if (!err) {
             const item = that.list[i];
             item.rewards = Number(web3js.utils.fromWei(res, 'ether'));
+            // item.apy = getPoolApy(that.priceData['BNBC'], that.priceData['BNFY']);
             // console.log('reward', i, web3js.utils.fromWei(res, 'ether'));
             that.totalEarn += item.rewards;
           }
         });
       }
       that.$emit('change', that.totalEarn);
+    },
+    async getApy() {
+      await this.getPrice();
+      for (let i = 0; i < this.poolsLength; i++) {
+        await contract.call('pendingAlpaca', [i, this.account], { from: this.account }, function(err, res) {
+          if (!err) {
+            const item = that.list[i];
+            const totalToken = Number(web3js.utils.fromWei(res, 'ether'));
+            item.apy = getPoolApy(that.priceData['BNBC'], that.priceData['BNFY'], totalToken);
+          }
+        });
+      }
     },
     // approve
     async approve(item) {
