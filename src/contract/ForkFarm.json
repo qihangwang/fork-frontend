@@ -2,8 +2,8 @@
     {
       "inputs": [
         {
-          "internalType": "contract ForkToken",
-          "name": "_fork",
+          "internalType": "contract CheckToken",
+          "name": "_check",
           "type": "address"
         },
         {
@@ -13,22 +13,12 @@
         },
         {
           "internalType": "uint256",
-          "name": "_forkPerBlock",
+          "name": "_checkPerBlock",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
           "name": "_startBlock",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_bonusLockupBps",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_bonusEndBlock",
           "type": "uint256"
         }
       ],
@@ -55,9 +45,65 @@
           "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "pending",
+          "type": "uint256"
+        }
+      ],
+      "name": "CashedCheck",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "pid",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
         }
       ],
       "name": "Deposit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "pid",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "DepositCheckToCashPool",
       "type": "event"
     },
     {
@@ -131,7 +177,7 @@
     },
     {
       "inputs": [],
-      "name": "bonusEndBlock",
+      "name": "BONUS_MULTIPLIER",
       "outputs": [
         {
           "internalType": "uint256",
@@ -144,12 +190,63 @@
       "constant": true
     },
     {
-      "inputs": [],
-      "name": "bonusLockUpBps",
-      "outputs": [
+      "inputs": [
         {
           "internalType": "uint256",
           "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "cashPoolInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "cashTotal",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "cashToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "stakeTotal",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "startBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "endBlock",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "cashUserInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
           "type": "uint256"
         }
       ],
@@ -159,7 +256,21 @@
     },
     {
       "inputs": [],
-      "name": "bonusMultiplier",
+      "name": "check",
+      "outputs": [
+        {
+          "internalType": "contract CheckToken",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "checkPerBlock",
       "outputs": [
         {
           "internalType": "uint256",
@@ -179,34 +290,6 @@
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "fork",
-      "outputs": [
-        {
-          "internalType": "contract ForkToken",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "forkPerBlock",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -254,12 +337,17 @@
         },
         {
           "internalType": "uint256",
-          "name": "accForkPerShare",
+          "name": "accCheckPerShare",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "accForkPerShareTilBonusEnd",
+          "name": "projectId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lpSupply",
           "type": "uint256"
         }
       ],
@@ -339,11 +427,6 @@
           "internalType": "uint256",
           "name": "rewardDebt",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "bonusDebt",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -367,11 +450,11 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_forkPerBlock",
+          "name": "_checkPerBlock",
           "type": "uint256"
         }
       ],
-      "name": "setForkPerBlock",
+      "name": "updateCheckPerBlock",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -380,27 +463,54 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_bonusMultiplier",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_bonusEndBlock",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_bonusLockUpBps",
+          "name": "multiplierNumber",
           "type": "uint256"
         }
       ],
-      "name": "setBonus",
+      "name": "updateMultiplier",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_pid",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_projectId",
+          "type": "uint256"
+        }
+      ],
+      "name": "updatePoolPorjectId",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "poolLength",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectId",
+          "type": "uint256"
+        },
         {
           "internalType": "uint256",
           "name": "_allocPoint",
@@ -417,7 +527,7 @@
           "type": "bool"
         }
       ],
-      "name": "addPool",
+      "name": "add",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -440,7 +550,7 @@
           "type": "bool"
         }
       ],
-      "name": "setPool",
+      "name": "set",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -448,65 +558,13 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_stakeToken",
-          "type": "address"
-        }
-      ],
-      "name": "isDuplicatedPool",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "poolLength",
-      "outputs": [
+          "internalType": "uint256",
+          "name": "_from",
+          "type": "uint256"
+        },
         {
           "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "_to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "manualMint",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_lastRewardBlock",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_currentBlock",
           "type": "uint256"
         }
       ],
@@ -526,6 +584,92 @@
       "inputs": [
         {
           "internalType": "uint256",
+          "name": "_cashTotal",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_cashToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_startBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_endBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "addCashPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_pid",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_cashTotal",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_cashToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_startBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_endBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "setCashPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_stakeToken",
+          "type": "address"
+        }
+      ],
+      "name": "isDuplicatedPool",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
           "name": "_pid",
           "type": "uint256"
         },
@@ -535,7 +679,7 @@
           "type": "address"
         }
       ],
-      "name": "pendingFork",
+      "name": "pendingCheck",
       "outputs": [
         {
           "internalType": "uint256",
@@ -638,6 +782,42 @@
         }
       ],
       "name": "emergencyWithdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_for",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_pid",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositCheckToCashPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_pid",
+          "type": "uint256"
+        }
+      ],
+      "name": "cashCheck",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

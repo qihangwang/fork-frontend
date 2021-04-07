@@ -39,7 +39,7 @@
                     <span class="apy">APY {{ item.apy }}</span>
                   </el-col>
                   <el-col :span="9">
-                    <span class="name earn">Alpaca Earned: {{ item.rewards.toFixed(2) }}</span>
+                    <span class="name earn">FORK Earned: {{ item.rewards.toFixed(2) }}</span>
                   </el-col>
                 </el-row>
               </template>
@@ -151,7 +151,7 @@ export default {
       contracts,
       list: [
         // {
-        //   title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
+        //   title: 'Stake Fork-WBNB LP token to earn FORK rewards',
         //   name: 'Fork-WBNB LP token',
         //   contract: 'UN2',
         //   status: 0,
@@ -173,20 +173,20 @@ export default {
       // 替换文字图片
       infoList: [
         {
-          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
-          name: 'Fork-WBNB LP token',
+          title: 'Stake FORK-WBNB LP token to earn FORK rewards',
+          name: 'FORK-WBNB LP token',
           imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
         },
         {
-          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
-          name: 'Fork-WBNB LP toke1n',
+          title: 'Stake FORK-BUSD LP token to earn FORK rewards',
+          name: 'FORK-BUSD LP toke1n',
           imgs: [
             'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
             'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
           ],
         },
         {
-          title: 'Stake Fork-WBNB LP token to earn ALPACA rewards',
+          title: 'Stake Fork-WBNB LP token to earn FORK rewards',
           name: 'Fork-WBNB LP token',
           imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
         },
@@ -369,7 +369,7 @@ export default {
       const pool = this.contracts.IFairLaunch;
       const contract = new Contract(pool.abi, pool.address, pool.name);
       for (let i = 0; i < this.poolsLength; i++) {
-        await contract.call('pendingAlpaca', [i, this.account], { from: this.account }, function(err, res) {
+        await contract.call('pendingFork', [i, this.account], { from: this.account }, function(err, res) {
           if (!err) {
             const item = that.list[i];
             item.rewards = Number(web3js.utils.fromWei(res, 'ether'));
@@ -384,7 +384,7 @@ export default {
     async getApy() {
       await this.getPrice();
       for (let i = 0; i < this.poolsLength; i++) {
-        await contract.call('pendingAlpaca', [i, this.account], { from: this.account }, function(err, res) {
+        await contract.call('pendingFork', [i, this.account], { from: this.account }, function(err, res) {
           if (!err) {
             const item = that.list[i];
             const totalToken = Number(web3js.utils.fromWei(res, 'ether'));
@@ -462,6 +462,7 @@ export default {
     },
     // operating harvest token
     getRewards(callback, index) {
+      console.log(index)
       const current = this.contracts.IFairLaunch;
       const contract = new Contract(current.abi, current.address);
       return contract.send('harvest', index, { from: this.account }, function(err, res) {

@@ -23,7 +23,7 @@
             <div class="flex">
               <span class="icon wallet-icon" />
               <div>
-                <div class="ti">Your ALPACA wallet balance :</div>
+                <div class="ti">Your FORK wallet balance :</div>
                 <van-skeleton class="h-skeleton" :row="1" :loading="skeletonLoading" row-width="180">
                   <div class="count green">{{ walletMoney }}</div>
                 </van-skeleton>

@@ -15,7 +15,9 @@ class Contract {
     return this.contract.methods[method]().call(...args);
   }
   send(method, methodParms, ...args) {
-    if (methodParms) {
+      console.log(methodParms)
+    
+    if (methodParms !== undefined && methodParms !== false) {
       if (Array.isArray(methodParms)) {
         return this.contract.methods[method](...methodParms).send(...args);
       }
