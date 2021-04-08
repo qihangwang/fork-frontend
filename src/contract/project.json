@@ -1,0 +1,39 @@
+{
+    "0": {
+      "name": "ALOZ",
+      "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png",
+      "links": {
+        "twitter": "https://twitter.com/ForkFinance",
+        "telegram":"https://twitter.com/ForkFinance",
+        "medium": "https://twitter.com/ForkFinance"
+      },
+      "coin": "CAKE",
+      "desc": "Alpaca Finance is a leveraged yield farming product, and using leveraged products involves certain risks. Please read here to understand these risks. As a user of our protocol, you are in agreement that you are aware of these risks, and that all liability resides with you. So please don’t invest your life savings, or risk assets you can’t afford to lose. Try to be as careful with your funds as we are with our code.",
+      "pools": {
+          "0": {
+            "name": "FORK-WBNB",
+            "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png"
+          },
+          "1": {
+            "name": "CACK_BNB_2",
+            "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png"
+          },
+          "2": {
+            "name": "CACK_BNB_3",
+            "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png"
+          },
+          "3": {
+            "name": "CACK_BNB_4",
+            "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png"
+          },
+          "4": {
+            "name": "CACK_BNB_5",
+            "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png"
+          },
+          "5": {
+            "name": "CACK_BNB",
+            "icon": "https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png"
+          }
+      }
+    }
+}

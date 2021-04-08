@@ -179,7 +179,7 @@ export default {
         },
         {
           title: 'Stake FORK-BUSD LP token to earn FORK rewards',
-          name: 'FORK-BUSD LP toke1n',
+          name: 'FORK-BUSD LP token',
           imgs: [
             'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
             'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
@@ -343,7 +343,6 @@ export default {
         const res = await contract.getBalance(this.account, tokenAdress);
         if (res) {
           this.list[i].stake = web3js.utils.fromWei(res, 'ether');
-          // console.log('stake', i, web3js.utils.fromWei(res, 'ether'));
         }
       }
     },

@@ -1,71 +1,121 @@
 <template>
   <div class="list">
-    <van-skeleton :row="8" class="m-skeleton skeleton" :loading="false">
+    <van-skeleton :row="8" class="m-skeleton skeleton" :loading="skeletonLoading">
       <el-row :gutter="20">
-        <el-col v-for="item in FarmsList" :key="item.id" :md="12" :sm="24">
-          <!-- 这里是组件 -->
+        <el-col v-for="(item, index) of list" :key="index" :md="12" :sm="24">
           <div class="base-card">
-            <!-- <FarmsCard :data="item" /> -->
             <el-card class="farms-card">
+              <el-collapse>
+                <el-collapse-item title="Project Info" class="blue-pan">
+                  <div class="project">
+                    <img class="project-img" :src="item.project.icon" />
+                    <div>
+                      <p class="project-name">ALOZ</p>
+                      <div class="project-link">
+                        <a
+                          class="project-link-item"
+                          v-for="(item, key, index) in item.project.links"
+                          :class="key"
+                          :key="index"
+                          :href="item"
+                          target="_blank"
+                        >
+                          <img :src="icons[key]" />
+                        </a>
+                      </div>
+                      <span class="project-coin">BUSD</span>
+                    </div>
+                  </div>
+                  <div class="project-desc">{{ item.project.desc }}</div>
+                </el-collapse-item>
+              </el-collapse>
               <div class="title-content base-flex">
                 <div class="icon">
-                  <!-- <van-skeleton :row="1" class="large-skeleton" :loading="skeletonLoading"> -->
-                    <img :src="item.icon" alt="" />
-                  <!-- </van-skeleton> -->
+                  <img :src="item.pool.icon" alt="" />
                 </div>
                 <div class="flex-item-end">
-                  <!-- <van-skeleton :row="1" class="my-skeleton" :loading="skeletonLoading"> -->
-                    <div class="title">{{ item.title || 'N/A' }}</div>
-                  <!-- </van-skeleton> -->
+                  <div class="title">{{ item.pool.name || 'N/A' }}</div>
                 </div>
               </div>
               <div class="base-flex base-flex-item-lits">
                 <div class="base-flex-content">APR:</div>
-                <div class="flex-item-end base-flex-number">
-                  <!-- <van-skeleton :row="1" class="content-skeleton" :loading="skeletonLoading"> -->
-                    {{ Number(item.apr || 0).toFixed(2) }}%
-                  <!-- </van-skeleton> -->
-                </div>
+                <div class="flex-item-end base-flex-number">100%</div>
               </div>
               <div class="base-flex base-flex-item-lits">
                 <div class="base-flex-content">Earn:</div>
                 <div class="flex-item-end base-flex-number">
-                  <!-- <van-skeleton :row="1" class="content-skeleton" :loading="skeletonLoading"> -->
-                    {{ item.earn }}
-                  <!-- </van-skeleton> -->
+                  FORK
                 </div>
               </div>
               <div class="model-pan">
                 <div class="solo-title">
-                  <span>CAKE</span>
+                  <span>FORK</span>
                   <span>Earned</span>
                 </div>
                 <div class="base-flex base-flex-item-lits">
-                  <div class="base-flex-content grey-tite">{{ item.earned }}</div>
+                  <div class="base-flex-content bold-num">{{ item.rewards }}</div>
                   <div class="flex-item-end base-flex-number">
-                    <el-button type="info" plain disabled class="gray-butn">Harvest</el-button>
+                    <el-button
+                      type="info"
+                      :disabled="item.rewards == 0"
+                      plain
+                      :class="['gray-butn']"
+                      v-if="item.status == 0"
+                      >Harvest</el-button
+                    >
+                    <el-button v-else :disabled="item.rewards == 0" type="primary custom-border">Harvest</el-button>
                   </div>
                 </div>
                 <div class="solo-title">
-                  <span>CAKE-BNB LP</span>
+                  <span>{{ item.pool.name }} LP</span>
                   <span>Staked</span>
                 </div>
-                <el-button type="primary" class="wallet" round>Unlock Wallet</el-button>
-                <!-- 切割线 -->
+                <template>
+                  <el-button v-if="item.status == 0" type="primary" class="wallet" round @click="approve(item)"
+                    >Approve</el-button
+                  >
+                  <div v-else class="stake-line">
+                    <span class="bold-num">{{ item.staked }}</span>
+                    <el-button v-if="item.staked == 0" type="primary custom-border" @click="changeModel('Stake', item)"
+                      >Stake LP</el-button
+                    >
+                    <div v-else>
+                      <el-button type="info" plain class="gray-butn add" @click="changeModel('Unstake', item)">
+                        -
+                      </el-button>
+                      <el-button type="info" plain class="gray-butn add" @click="changeModel('Stake', item)">
+                        +
+                      </el-button>
+                    </div>
+                  </div>
+                </template>
                 <div class="split-line"></div>
-                <el-collapse v-model="activeNames">
-                  <el-collapse-item :title="activeNames[0] === '1' ? 'Hide' : 'Details'" name="1" class="hide-pan">
+                <el-collapse>
+                  <el-collapse-item title="Details" name="1" class="hide-pan">
                     <div class="base-flex base-flex-item-lits">
                       <div class="base-flex-content">Total Liquidity</div>
-                      <div class="flex-item-end base-flex-number">
-                        <!-- <van-skeleton :row="1" class="content-skeleton" :loading="skeletonLoading"> -->
-                          ${{ item.total }}
-                        <!-- </van-skeleton> -->
-                      </div>
+                      <div class="flex-item-end base-flex-number">${{ item.lpSupply }}</div>
                     </div>
-                    <div class="goLink" v-for="val in item.link" :key="val.name" @click="() => goLink(val.url)">
-                      {{ val.name }}
-                      <i class="el-icon-top-right"></i>
+                    <div class="goLink">
+                      <a
+                        href="https://exchange.pancakeswap.finance/#/add/BNB/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"
+                        target="_blank"
+                      >
+                        <span>GET {{ item.pool.name }} LP</span>
+                        <i class="el-icon-top-right"></i>
+                      </a>
+                    </div>
+                    <div class="goLink">
+                      <a :href="`https://bscscan.com/address/${item.stakeToken}`" target="_blank">
+                        <span>View Contract</span>
+                        <i class="el-icon-top-right"></i>
+                      </a>
+                    </div>
+                    <div class="goLink">
+                      <a :href="`https://pancakeswap.info/pair/${item.stakeToken}`" target="_blank">
+                        <span>See Pair Info</span>
+                        <i class="el-icon-top-right"></i>
+                      </a>
                     </div>
                   </el-collapse-item>
                 </el-collapse>
@@ -75,56 +125,234 @@
         </el-col>
       </el-row>
     </van-skeleton>
+    <Model
+      :visable="modelVisable"
+      :onOk="onOk"
+      :type="modelType"
+      :data="activeItem"
+      :onCanel="closeModel"
+      :onClose="closeModel"
+      ref="model"
+    />
   </div>
 </template>
 
 <script>
+import Contract from '@/utils/contract';
+import { common } from '@/utils/common';
+import contracts from '@/utils/contractObj';
+import projectJSON from '@/contract/project.json';
+import Model from './Model.vue';
 export default {
   name: 'FarmsCard',
   props: {
     type: [Number, String],
   },
+  components: {
+    Model,
+  },
   data() {
     return {
-      FarmsList: [
-        {
-          id: 1,
-          icon: 'https://pancakeswap.finance/images/farms/cake-bnb.svg',
-          title: 'CAKE-BNB',
-          apr: '85.812',
-          earn: 'CAKE',
-          earned: 0,
-          total: '694,471,471',
-          link: [
-            {
-              name: 'google',
-              url: 'https://www.google.com',
-            },
-          ],
-        },
-        {
-          id: 2,
-        },
-      ],
-      skeletonShow: false,
-      activeNames: [],
+      contracts,
+      skeletonLoading: true,
+      poolsLength: 0,
+      list: [],
+      icons: {
+        twitter: require('@/assets/images/twitter.png'),
+        medium: require('@/assets/images/medium.png'),
+        telegram: require('@/assets/images/telegram.png'),
+        docs: require('@/assets/images/docs.png'),
+      },
+      modelType: '',
+      modelVisable: false,
+      activeItem: {},
+      timer: null,
     };
   },
   computed: {
-    // skeletonLoading() {
-    //   return !(Object.keys(this.data).length && this.skeletonShow);
-    // },
-  },
-  methods: {
-    goLink(url) {
-      window.location.href = url;
+    account() {
+      return this.$store.state.account;
     },
   },
   created() {
-    // const that = this;
-    // setTimeout(function() {
-    //   that.skeletonShow = false;
-    // }, 200);
+    console.log(this.account, this.chainIdError);
+    if (this.account && !this.chainIdError) {
+      this.init();
+    }
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  },
+  watch: {
+    account(v) {
+      this.skeletonLoading = true;
+      if (v) {
+        if (!this.chainIdError) {
+          this.init();
+        }
+      }
+    },
+    chainIdError(status) {
+      this.timer && clearTimeout(this.timer);
+      if (!status) {
+        if (this.account) {
+          this.init();
+        }
+      } else {
+        this.skeletonLoading = true;
+      }
+    },
+  },
+  methods: {
+    async init() {
+      this.skeletonLoading = true;
+      await this.getPools();
+      await this.checkAllowance();
+      await this.getStakedVal();
+      await this.getForkReward();
+      this.update();
+      this.skeletonLoading = false;
+    },
+    // The timer updates data every 10s
+    async update() {
+      console.log(new Date().getSeconds(), 'earn');
+      this.timer = setTimeout(async () => {
+        await this.getForkReward();
+        console.log(new Date().getSeconds(), 'earn');
+        this.update();
+      }, 10000);
+    },
+    // first get pools
+    async getPools() {
+      const that = this;
+      const current = this.contracts.ForkFarm;
+      const contract = new Contract(current.abi, current.address, current.name);
+      try {
+        await contract.call('poolLength', false, function(err, res) {
+          if (!err) {
+            that.poolsLength = res;
+          }
+        });
+      } catch {
+        console.log('get pool length error');
+      }
+      let arr = [];
+      for (let index = 0; index < this.poolsLength; index++) {
+        // alreay get pool stakeval and total
+        await contract.call('poolInfo', index, function(err, res) {
+          if (!err) {
+            res.project = projectJSON[res.projectId];
+            res.pool = res.project ? res.project.pools[index] : undefined;
+            const obj = {
+              ...res,
+              status: 0,
+              apy: '0%',
+              staked: 0,
+              rewards: 0,
+              index,
+            };
+            arr.push(obj);
+          }
+        });
+      }
+      this.list = arr;
+    },
+    // second get allowance
+    async checkAllowance() {
+      const that = this;
+      const pools = this.contracts.ForkFarm;
+      for (let index = 0; index < this.poolsLength; index++) {
+        const contract = new Contract(
+          this.contracts['ERC20'].abi,
+          this.list[index].stakeToken,
+          this.contracts['ERC20'].name,
+        );
+        const res = await contract.allowance(this.account, pools.address, function(err, result) {
+          if (!err) {
+            const approveVal = Number(web3js.utils.fromWei(result, 'ether'));
+            console.log(approveVal, index, 'approveVal');
+            return approveVal;
+          } else {
+            return 0;
+          }
+        });
+        if (res == 0 || !res) {
+          that.list[index].status = 0;
+        } else {
+          that.list[index].status = 1;
+        }
+      }
+    },
+    // third get staked val and earn val
+    async getStakedVal() {
+      const that = this;
+      const pool = this.contracts.ForkFarm;
+      const contract = new Contract(pool.abi, pool.address, pool.name);
+      for (let i = 0; i < this.poolsLength; i++) {
+        if (this.list[i].status !== 0) {
+          console.log(i, this.account)
+          await contract.call('userInfo', [i, this.account], { from: this.account }, function(err, res) {
+            if (!err) {
+              const item = that.list[i];
+              item.staked = web3js.utils.fromWei(res.amount, 'ether');
+            }
+          });
+        }
+      }
+    },
+    async getForkReward() {
+      const that = this;
+      const pool = this.contracts.ForkFarm;
+      const contract = new Contract(pool.abi, pool.address, pool.name);
+      for (let i = 0; i < this.poolsLength; i++) {
+        if (this.list[i].status !== 0) {
+          await contract.call('pendingCheck', [i, this.account], { from: this.account }, function(err, res) {
+            if (!err) {
+              const item = that.list[i];
+              item.rewards = web3js.utils.fromWei(res, 'ether');
+              console.log( web3js.utils.fromWei(res, 'ether'), 'rewards')
+            }
+          });
+        }
+      }
+    },
+    // approve
+    async approve(item) {
+      let res = await common(this.approveFn, item.stakeToken);
+      if (res) {
+        item.status = 1;
+      }
+    },
+    async approveFn(callback, address) {
+      const p = 'ether',
+        quota = web3js.utils.toWei('100000000000000000', p); //授权额度
+      const target = this.contracts.ForkFarm;
+      const contract = new Contract(this.contracts['ERC20'].abi, address, this.contracts['ERC20'].name);
+      return contract.approve(target.address, quota, { from: this.account }, function(err, res) {
+        if (!err) {
+          console.log('授权成功');
+          callback(res);
+        }
+      });
+    },
+    changeModel(type, item) {
+      this.modelVisable = true;
+      this.modelType = type;
+      this.activeItem = item;
+    },
+    closeModel() {
+      this.modelVisable = false;
+      this.activeItem = {};
+      this.modelType = '';
+    },
+    onOk() {
+      this.modelVisable = false;
+      this.activeItem = {};
+      this.modelType = '';
+    },
   },
 };
 </script>
@@ -196,29 +424,48 @@ export default {
       color: @deepFontColor;
     }
   }
-  .grey-tite {
-    font-size: 20px;
-    color: rgb(189, 194, 196);
-  }
   .gray-butn {
-    background-color: rgb(233, 234, 235);
-    border-color: rgb(233, 234, 235);
+    background-color: #ededed;
+    border-color: #e9eaeb;
     box-shadow: none;
     color: rgb(189, 194, 196);
-    cursor: not-allowed;
     align-items: center;
     border: 0px;
     border-radius: 16px;
-    height: 48px;
+    height: 44px;
     padding: 0px 24px;
     outline: 0px;
     transition: background-color 0.2s ease 0s;
+    box-shadow: rgba(14, 14, 44, 0.1) 0px -1px 0px 0px inset;
     &:hover {
       background-color: rgb(233, 234, 235);
       border-color: rgb(233, 234, 235);
-      box-shadow: none;
-      color: rgb(189, 194, 196);
     }
+  }
+  .add {
+    color: #2196f3;
+    font-size: 26px;
+    line-height: 20px;
+    &:hover {
+      color: #2196f3;
+      background-color: #f7f7f7;
+    }
+  }
+  .custom-border {
+    border-radius: 16px;
+    height: 44px;
+    box-shadow: rgba(14, 14, 44, 0.4) 0px -1px 0px 0px inset;
+  }
+
+  .stake-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bold-num {
+    color: #023267;
+    font-weight: 600;
+    font-size: 22px;
   }
   .split-line {
     margin: 20px 0;
@@ -269,6 +516,72 @@ export default {
     }
   }
 }
+
+.blue-pan {
+  /deep/.el-collapse-item__header {
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #1fc7d4;
+  }
+  /deep/.el-collapse-item__content {
+    padding: 10px;
+  }
+  /deep/.el-collapse-item__wrap {
+    background: rgba(32, 148, 240, 0.38);
+    padding: 0px 10px;
+    border-radius: 23px;
+    margin-bottom: 10px;
+  }
+}
+.project {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  &-img {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+  }
+  &-name {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  &-coin {
+    background: #fff;
+    color: #000;
+    border-radius: 16px;
+    padding: 3px 16px;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .project-link-item {
+    width: 36px;
+    height: 36px;
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px;
+    background: #fff;
+    display: inline-flex;
+    border-radius: 50%;
+    > img {
+      width: 100%;
+    }
+  }
+}
+.project-desc {
+  text-align: left;
+  margin: 10px 0 20px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  padding-left: 60px;
+}
+
 .my-skeleton {
   min-width: 120px;
   height: 60px;
