@@ -19,10 +19,10 @@ export default {
     abi: IERC20JSON,
     name: 'UN2',
   },
-  BNB: {
-    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['BNB'] : '',
+  WBNB: {
+    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['WBNB'] : '',
     abi: WBNBJSON,
-    name: 'BNB',
+    name: 'WBNB',
   },
   BUSD: {
     address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['BUSD'] : '',

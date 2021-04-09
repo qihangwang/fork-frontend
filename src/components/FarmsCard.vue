@@ -41,9 +41,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="base-flex base-flex-item-lits">
-                  <div class="base-flex-content">APR:</div>
-                  <div class="flex-item-end base-flex-number">100%</div>
+                <div class="base-flex base-flex-item-lits" v-if="item.allocPoint != 0">
+                  <div class="base-flex-content">APY:</div>
+                  <div class="flex-item-end base-flex-number">{{ item.apy }}%</div>
                 </div>
                 <div class="base-flex base-flex-item-lits">
                   <div class="base-flex-content">Earn:</div>
@@ -101,9 +101,9 @@
                   <div class="split-line"></div>
                   <el-collapse>
                     <el-collapse-item title="Details" name="1" class="hide-pan">
-                      <div class="base-flex base-flex-item-lits">
+                      <div class="base-flex base-flex-item-lits" v-if="item.allocPoint != 0">
                         <div class="base-flex-content">Total Liquidity</div>
-                        <div class="flex-item-end base-flex-number">${{ item.lpSupply }}</div>
+                        <div class="flex-item-end base-flex-number">${{ item.totalUsdt }}</div>
                       </div>
                       <div class="goLink">
                         <a
@@ -155,7 +155,7 @@
 import BigNumber from 'bignumber.js';
 import Contract from '@/utils/contract';
 import { common } from '@/utils/common';
-import { getFarmApy } from '@/utils/apy';
+import { getFarmApy, getPriceBusd } from '@/utils/apy';
 import contracts from '@/config/contractObj';
 import FarmProject from '@/config/farm.js';
 import Model from './Model.vue';
@@ -361,6 +361,9 @@ export default {
     // four
     async getApys() {
       for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i].allocPoint == 0) {
+          return false;
+        }
         // 1. comput poolWeight
         this.list[i].poolWeight = new BigNumber(this.list[i].allocPoint).div(
           new BigNumber(this.list[i].totalAllocPoint),
@@ -375,9 +378,10 @@ export default {
           this.list[i].quoteToken.address,
           this.contracts['ERC20'].name,
         );
+        // compute totla
+        const totalSupply = await poolContract.call('totalSupply');
+        const quoteTokenBalanceLP = await quotaContract.call('balanceOf', this.list[i].stakeToken);
 
-        const totalSupply = await poolContract.call('totalSupply'); // 池子总量
-        const quoteTokenBalanceLP = await quotaContract.call('balanceOf', this.list[i].stakeToken); // 质押A的余额
         // 2 comput lpTotalInQuoteToken
         if (totalSupply) {
           const lpTotalSupply = web3js.utils.fromWei(totalSupply, 'ether');
@@ -386,11 +390,18 @@ export default {
             .div(new BigNumber(10).pow(18))
             .times(new BigNumber(2))
             .times(lpTokenRatio);
+          console.log(lpTokenRatio.toJSON(), lpTotalInQuoteToken.toJSON(), 222);
+          this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
           this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
-
-          const quotaTokenName = this.list[i].quoteToken.name;
-          console.log(this.list[i].poolWeight.toJSON(), lpTotalInQuoteToken.toJSON(), quotaTokenName, '----apy---');
-          this.list[i].apy = (await getFarmApy(this.list[i].poolWeight, lpTotalInQuoteToken, quotaTokenName)) || 0;
+          const totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
+            new BigNumber(this.list[i].lpTotalInQuoteToken),
+          );
+          // const quotaTokenName = this.list[i].quoteToken.name;
+          // console.log(this.list[i].poolWeight.toJSON(), lpTotalInQuoteToken.toJSON(), quotaTokenName, '----apy---');
+          const apy = await getFarmApy(this.list[i].poolWeight, totalUsdt);
+          console.log(apy);
+          this.list[i].apy = apy ? apy.toFixed(2) : 0;
+          this.list[i].totalUsdt = totalUsdt.toFixed(4);
         }
       }
     },
@@ -678,7 +689,7 @@ export default {
   min-height: 400px;
   height: 100%;
   flex-direction: column;
-  >div {
+  > div {
     margin-top: 10px;
   }
 }

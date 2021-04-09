@@ -134,7 +134,7 @@ export default {
     },
     // get earn fork
     async getFork() {
-      const current = this.contracts.Fork;
+      const current = this.contracts.FORK;
       let contract = new Contract(current.abi, current.address, current.name);
       let walletMoney = await contract.getBalance(this.account, current.address);
       let walletLock = await contract.call('lockOf', this.account);

@@ -19,11 +19,11 @@ const FarmProject = {
       '0': {
         name: 'FORK-WBNB-LP',
         icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
-        quoteToken: {
+        token: {
           name: 'FORK',
           address: EXPLORER_CONTRACT[networkId]['FORK'],
         },
-        token: {
+        quoteToken: {
           name: 'WBNB',
           address: EXPLORER_CONTRACT[networkId]['WBNB'],
         },
@@ -31,11 +31,11 @@ const FarmProject = {
       '1': {
         name: 'FORK-BUSD-LP',
         icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
-        quoteToken: {
+        token: {
           name: 'FORK',
           address: EXPLORER_CONTRACT[networkId]['FORK'],
         },
-        token: {
+        quoteToken: {
           name: 'BUSD',
           address: EXPLORER_CONTRACT[networkId]['BUSD'],
         },
@@ -51,11 +51,11 @@ const FarmProject = {
       '3': {
         name: 'CHECK-WBNB-LP',
         icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
-        quoteToken: {
+        token: {
           name: 'CHECK',
           address: EXPLORER_CONTRACT[networkId]['CHECK'],
         },
-        token: {
+        quoteToken: {
           name: 'WBNB',
           address: EXPLORER_CONTRACT[networkId]['WBNB'],
         },
@@ -63,11 +63,11 @@ const FarmProject = {
       '4': {
         name: 'CHECK-BUSD-LP',
         icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
-        quoteToken: {
+        token: {
           name: 'CHECK',
           address: EXPLORER_CONTRACT[networkId]['CHECK'],
         },
-        token: {
+        quoteToken: {
           name: 'WBNB',
           address: EXPLORER_CONTRACT[networkId]['WBNB'],
         },

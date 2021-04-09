@@ -36,7 +36,7 @@
                     <div class="name">{{ item.name }}</div>
                   </el-col>
                   <el-col :span="4">
-                    <span class="apy">APY {{ item.apy }}</span>
+                    <span class="apy">APY {{ item.apy }}%</span>
                   </el-col>
                   <el-col :span="9">
                     <span class="name earn">FORK Earned: {{ item.rewards.toFixed(2) }}</span>
@@ -137,8 +137,11 @@
 <script>
 import Contract from '@/utils/contract';
 import { common } from '@/utils/common';
-import { getPoolApy } from '@/utils/common';
 import contracts from '@/config/contractObj';
+import BigNumber from 'bignumber.js';
+import { getPoolApy, getPriceBusd } from '@/utils/apy';
+import StakePools from '@/config/stake.js';
+
 export default {
   name: 'StakeList',
   props: {
@@ -172,24 +175,24 @@ export default {
       priceData: {},
       // 替换文字图片
       infoList: [
-        {
-          title: 'Stake FORK-WBNB LP token to earn FORK rewards',
-          name: 'FORK-WBNB LP token',
-          imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
-        },
-        {
-          title: 'Stake FORK-BUSD LP token to earn FORK rewards',
-          name: 'FORK-BUSD LP token',
-          imgs: [
-            'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-            'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-          ],
-        },
-        {
-          title: 'Stake Fork-WBNB LP token to earn FORK rewards',
-          name: 'Fork-WBNB LP token',
-          imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
-        },
+        // {
+        //   title: 'Stake FORK-WBNB LP token to earn FORK rewards',
+        //   name: 'FORK-WBNB LP token',
+        //   imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
+        // },
+        // {
+        //   title: 'Stake FORK-BUSD LP token to earn FORK rewards',
+        //   name: 'FORK-BUSD LP token',
+        //   imgs: [
+        //     'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
+        //     'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
+        //   ],
+        // },
+        // {
+        //   title: 'Stake Fork-WBNB LP token to earn FORK rewards',
+        //   name: 'Fork-WBNB LP token',
+        //   imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
+        // },
       ],
       totalEarn: 0,
       timer: null,
@@ -242,18 +245,14 @@ export default {
         item.stakeInput = Number(val) >= Number(item.stake) ? item.stake : val;
       }
     },
-    async getPrice() {
-      const res = await this.$axios({
-        method: 'get',
-        url: 'https://api.pancakeswap.com/api/v1/price',
-      });
-      this.priceData = res.data.prices;
-    },
     async init() {
       this.skeletonLoading = true;
       await this.getPools();
-      await this.getStake();
-      await this.getPool();
+      await this.checkAllowance();
+      await this.getStakeVal();
+      await this.getUnStakeVal();
+      await this.getForkReward();
+      await this.getApys();
       this.update();
       this.skeletonLoading = false;
     },
@@ -261,8 +260,7 @@ export default {
     async update() {
       console.log(new Date().getSeconds());
       this.timer = setTimeout(async () => {
-        await this.getStake();
-        await this.getPool();
+        await this.getRewards();
         console.log(new Date().getSeconds());
         this.update();
       }, 10000);
@@ -282,32 +280,33 @@ export default {
         console.log('error');
       }
       let arr = [];
+      const multiple = await contract.call('bonusMultiplier'); //multiple
+      const totalAllocPoint = await contract.call('totalAllocPoint'); //multiple
       for (let i = 0; i < this.poolsLength; i++) {
         await contract.call('poolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
-              title: that.infoList[i].title, //title
-              name: that.infoList[i].name,
+              // title: StakePools[i].title, //title
+              // name: StakePools[i].name,
               status: 0, // 是否授权
-              imgs: that.infoList[i].imgs, //icon
-              apy: '0%', //回报
+              // imgs: StakePools[i].imgs, //icon
+              apy: '0', //回报
               tokenAdress: res.stakeToken, // 左边可质押的合约地址
               stake: 0, //左边还可以质押了多少
               stakeInput: '',
               unstake: 0, //右边还可以解押了多少
               unstakeInput: '',
               rewards: 0, //奖励
+              multiple,
+              totalAllocPoint,
+              ...res,
+              ...StakePools[i],
             };
             arr.push(obj);
           }
         });
       }
       this.list = arr;
-    },
-    // second: Get information about the stake token
-    async getStake() {
-      await this.checkAllowance();
-      await this.getStakeVal();
     },
     // get stake allowance
     async checkAllowance() {
@@ -347,10 +346,11 @@ export default {
       }
     },
     // third: Get information about the pool
-    async getPool() {
-      await this.getUnStakeVal();
-      await this.getForkReward();
-    },
+    // async getPool() {
+    //   await this.getUnStakeVal();
+    //   await this.getForkReward();
+    //   await this.getApys();
+    // },
     async getUnStakeVal() {
       const pool = this.contracts.IFairLaunch;
       const contract = new Contract(pool.abi, pool.address, pool.name);
@@ -380,16 +380,55 @@ export default {
       }
       that.$emit('change', that.totalEarn);
     },
-    async getApy() {
-      await this.getPrice();
-      for (let i = 0; i < this.poolsLength; i++) {
-        await contract.call('pendingFork', [i, this.account], { from: this.account }, function(err, res) {
-          if (!err) {
-            const item = that.list[i];
-            const totalToken = Number(web3js.utils.fromWei(res, 'ether'));
-            item.apy = getPoolApy(that.priceData['BNBC'], that.priceData['BNFY'], totalToken);
-          }
-        });
+    async getApys() {
+      for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i].allocPoint == 0) {
+          return false;
+        }
+        // 1. comput poolWeight
+        this.list[i].poolWeight = new BigNumber(this.list[i].allocPoint).div(
+          new BigNumber(this.list[i].totalAllocPoint),
+        );
+
+        const poolContract = new Contract(
+          this.contracts['ERC20'].abi,
+          this.list[i].stakeToken,
+          this.contracts['ERC20'].name,
+        );
+        const quotaContract = new Contract(
+          this.contracts['ERC20'].abi,
+          this.list[i].quoteToken.address,
+          this.contracts['ERC20'].name,
+        );
+        // compute totla
+        const pools = this.contracts.IFairLaunch;
+        let lpSupply = await poolContract.call('balanceOf', pools.address);
+        const totalSupply = await poolContract.call('totalSupply');
+        const quoteTokenBalanceLP = await quotaContract.call('balanceOf', this.list[i].stakeToken);
+
+        // 2 comput lpTotalInQuoteToken
+        if (totalSupply) {
+          const lpTotalSupply = web3js.utils.fromWei(totalSupply, 'ether');
+          lpSupply = web3js.utils.fromWei(lpSupply, 'ether');
+          const lpTokenRatio = new BigNumber(lpSupply).div(new BigNumber(lpTotalSupply));
+
+          const lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
+            .div(new BigNumber(10).pow(18))
+            .times(new BigNumber(2))
+            .times(lpTokenRatio);
+          this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
+          this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
+          console.log(this.list[i].quoteTokenPrice, this.list[i].lpTotalInQuoteToken, 'price');
+          const totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
+            new BigNumber(this.list[i].lpTotalInQuoteToken),
+          );
+          // const quotaTokenName = this.list[i].quoteToken.name;
+          console.log(totalUsdt.toJSON(), 'total-------------')
+          // console.log(this.list[i].poolWeight.toJSON(), lpTotalInQuoteToken.toJSON(), quotaTokenName, '----apy---');
+          // const apy = await getPoolApy(this.list[i].poolWeight, totalUsdt);
+          // console.log(apy);
+          // this.list[i].apy = apy ? apy.toFixed(2) : 0;
+        }
       }
     },
     // approve
@@ -420,12 +459,14 @@ export default {
         let res = await common(this.deposit, item.stakeInput, index);
         if (res) {
           item.stake = item.stake - item.stakeInput;
+          item.unstake = item.unstake + item.stakeInput;
           item.stakeInput = '';
         }
       } else if (type == 'unstake') {
         let res = await common(this.withdraw, item.unstakeInput, index);
         if (res) {
           item.unstake = item.unstake - item.unstakeInput;
+          item.stake = item.stake + item.unstakeInput;
           item.unstakeInput = '';
         }
       } else {
@@ -461,7 +502,6 @@ export default {
     },
     // operating harvest token
     getRewards(callback, index) {
-      console.log(index)
       const current = this.contracts.IFairLaunch;
       const contract = new Contract(current.abi, current.address);
       return contract.send('harvest', index, { from: this.account }, function(err, res) {
