@@ -33,15 +33,16 @@ export const getPriceBusd = async type => {
   const COUNT = new BigNumber(10).pow(18);
   const current = contracts.UniswapV2Router;
   const target = contracts[type];
+  const WBNB = contracts.WBNB;
   const BUSD = contracts.BUSD;
   const contract = new Contract(current.abi, current.address, current.name);
   if (target.address == BUSD.address) {
     return 1;
   }
-  const res = await contract.call('getAmountsOut', [COUNT, [target.address, BUSD.address]]);
-  console.log(res, 'res');
+  const arr = Array.from(new Set([target.address, WBNB.address, BUSD.address]));
+  const res = await contract.call('getAmountsOut', [COUNT, arr]);
   if (res) {
-    return new BigNumber(res[res.lengt - 1]).div(new BigNumber(10).pow(18));
+    return new BigNumber(res[res.length - 1]).div(new BigNumber(10).pow(18));
   }
   return ZERO;
 };
@@ -53,45 +54,24 @@ export const getPriceBusd = async type => {
  * @returns
  */
 
-export const getFarmApy = async (poolWeight, poolLiquidityUsdt) => {
+export const getFarmApy = async (poolWeight, poolLiquidityUsdt, multiple) => {
   const cakePriceUsd = await getPriceBusd('CHECK');
   const yearlyCakeRewardAllocation = CAKE_PER_BLOCK.times(BLOCKS_PER_YEAR).times(poolWeight);
-  console.log(yearlyCakeRewardAllocation.toJSON(), 'yearlyCakeRewardAllocation');
   const apy = yearlyCakeRewardAllocation
     .times(cakePriceUsd)
+    .times(multiple)
     .div(poolLiquidityUsdt)
     .times(100);
   return apy.isNaN() || !apy.isFinite() ? null : apy.toNumber();
 };
 
-export const getPoolApy = async (poolWeight, poolLiquidityUsdt) => {
+export const getPoolApy = async (poolWeight, poolLiquidityUsdt, multiple) => {
   const cakePriceUsd = await getPriceBusd('FORK');
-  console.log(cakePriceUsd, 'fork')
   const yearlyCakeRewardAllocation = FORK_PER_BLOCK.times(BLOCKS_PER_YEAR).times(poolWeight);
-  console.log(yearlyCakeRewardAllocation.toJSON(), 'yearlyCakeRewardAllocation');
   const apy = yearlyCakeRewardAllocation
     .times(cakePriceUsd)
+    .times(multiple)
     .div(poolLiquidityUsdt)
     .times(100);
   return apy.isNaN() || !apy.isFinite() ? null : apy.toNumber();
 };
-
-// export const getFarmApy1 = (poolWeight, cakePriceUsd: BigNumber, poolLiquidityUsd: BigNumber): number => {
-//   const yearlyCakeRewardAllocation = CAKE_PER_BLOCK.times(BLOCKS_PER_YEAR).times(poolWeight)
-//   const apy = yearlyCakeRewardAllocation.times(cakePriceUsd).div(poolLiquidityUsd).times(100)
-//   return apy.isNaN() || !apy.isFinite() ? null : apy.toNumber()
-// }
-
-// export const getStakeApy = async (poolWeight, poolLiquidity, quotaTokenName) => {
-//   const cakePriceUsd = await getPriceBusd('FORK');
-//   const quotaPriceUsd = await getPriceBusd(quotaTokenName);
-//   console.log(cakePriceUsd.toJSON(), quotaPriceUsd.toJSON(), '--cake--and---quota----')
-//   const yearlyCakeRewardAllocation = CAKE_PER_BLOCK.times(BLOCKS_PER_YEAR).times(poolWeight);
-//   console.log(yearlyCakeRewardAllocation, 'yearlyCakeRewardAllocation')
-//   const apy = yearlyCakeRewardAllocation
-//     .times(cakePriceUsd)
-//     .div(poolLiquidity)
-//     .div(quotaPriceUsd)
-//     .times(100);
-//   return apy.isNaN() || !apy.isFinite() ? null : apy.toNumber();
-// };

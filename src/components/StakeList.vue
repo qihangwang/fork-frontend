@@ -47,7 +47,9 @@
                 <el-col :md="9" :sm="12" :xs="24" class="flex-line">
                   <el-col :xs="24" class="line-title">
                     <span>I want to stake</span>
-                    <span>Available {{ item.name }} Balance: {{ item.stake }}</span>
+                    <span
+                      >Available {{ item.name }} Balance: {{ item.stake > 0 ? Number(item.stake).toFixed(4) : 0 }}
+                    </span>
                   </el-col>
                   <el-col :xs="24" class="item">
                     <el-input
@@ -81,7 +83,10 @@
                 <el-col :md="9" :sm="12" :xs="24" class="flex-line">
                   <el-col :xs="24" class="line-title">
                     <span>I want to unstake</span>
-                    <span>Staked {{ item.name }} Balance: {{ item.unstake }}</span>
+                    <span
+                      >Staked {{ item.name }} Balance:
+                      {{ item.unstake > 0 ? Number(item.unstake).toFixed(4) : 0 }}</span
+                    >
                   </el-col>
                   <el-col :xs="24" class="item">
                     <el-input
@@ -152,48 +157,8 @@ export default {
       skeletonLoading: true,
       poolsLength: 0,
       contracts,
-      list: [
-        // {
-        //   title: 'Stake Fork-WBNB LP token to earn FORK rewards',
-        //   name: 'Fork-WBNB LP token',
-        //   contract: 'UN2',
-        //   status: 0,
-        //   imgs: [
-        //     'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png',
-        //     'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-        //   ],
-        //   apy: '1000%',
-        //   quota: 0,
-        //   quotaInput: 0,
-        //   stake: 0,
-        //   stakeInput: '',
-        //   unstake: 0,
-        //   unstakeInput: '',
-        //   rewards: 0,
-        // },
-      ],
+      list: [],
       priceData: {},
-      // 替换文字图片
-      infoList: [
-        // {
-        //   title: 'Stake FORK-WBNB LP token to earn FORK rewards',
-        //   name: 'FORK-WBNB LP token',
-        //   imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
-        // },
-        // {
-        //   title: 'Stake FORK-BUSD LP token to earn FORK rewards',
-        //   name: 'FORK-BUSD LP token',
-        //   imgs: [
-        //     'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-        //     'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-        //   ],
-        // },
-        // {
-        //   title: 'Stake Fork-WBNB LP token to earn FORK rewards',
-        //   name: 'Fork-WBNB LP token',
-        //   imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
-        // },
-      ],
       totalEarn: 0,
       timer: null,
     };
@@ -252,15 +217,15 @@ export default {
       await this.getStakeVal();
       await this.getUnStakeVal();
       await this.getForkReward();
-      await this.getApys();
       this.update();
       this.skeletonLoading = false;
+      await this.getApys();
     },
     // The timer updates data every 10s
     async update() {
       console.log(new Date().getSeconds());
       this.timer = setTimeout(async () => {
-        await this.getRewards();
+        await this.getForkReward();
         console.log(new Date().getSeconds());
         this.update();
       }, 10000);
@@ -286,11 +251,8 @@ export default {
         await contract.call('poolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
-              // title: StakePools[i].title, //title
-              // name: StakePools[i].name,
               status: 0, // 是否授权
-              // imgs: StakePools[i].imgs, //icon
-              apy: '0', //回报
+              apy: 'N/A', //回报
               tokenAdress: res.stakeToken, // 左边可质押的合约地址
               stake: 0, //左边还可以质押了多少
               stakeInput: '',
@@ -346,11 +308,6 @@ export default {
       }
     },
     // third: Get information about the pool
-    // async getPool() {
-    //   await this.getUnStakeVal();
-    //   await this.getForkReward();
-    //   await this.getApys();
-    // },
     async getUnStakeVal() {
       const pool = this.contracts.IFairLaunch;
       const contract = new Contract(pool.abi, pool.address, pool.name);
@@ -358,7 +315,6 @@ export default {
         const res = await contract.call('userInfo', [i, this.account], { from: this.account });
         if (res) {
           this.list[i].unstake = web3js.utils.fromWei(res.amount, 'ether');
-          // console.log('unstake', i, web3js.utils.fromWei(res.amount, 'ether'));
         }
       }
     },
@@ -372,8 +328,6 @@ export default {
           if (!err) {
             const item = that.list[i];
             item.rewards = Number(web3js.utils.fromWei(res, 'ether'));
-            // item.apy = getPoolApy(that.priceData['BNBC'], that.priceData['BNFY']);
-            // console.log('reward', i, web3js.utils.fromWei(res, 'ether'));
             that.totalEarn += item.rewards;
           }
         });
@@ -389,7 +343,6 @@ export default {
         this.list[i].poolWeight = new BigNumber(this.list[i].allocPoint).div(
           new BigNumber(this.list[i].totalAllocPoint),
         );
-
         const poolContract = new Contract(
           this.contracts['ERC20'].abi,
           this.list[i].stakeToken,
@@ -418,16 +371,12 @@ export default {
             .times(lpTokenRatio);
           this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
           this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
-          console.log(this.list[i].quoteTokenPrice, this.list[i].lpTotalInQuoteToken, 'price');
+          // console.log(quoteTokenBalanceLP, lpSupply, lpTotalSupply,lpTokenRatio.toJSON(), lpTotalInQuoteToken.toJSON());
           const totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
             new BigNumber(this.list[i].lpTotalInQuoteToken),
           );
-          // const quotaTokenName = this.list[i].quoteToken.name;
-          console.log(totalUsdt.toJSON(), 'total-------------')
-          // console.log(this.list[i].poolWeight.toJSON(), lpTotalInQuoteToken.toJSON(), quotaTokenName, '----apy---');
-          // const apy = await getPoolApy(this.list[i].poolWeight, totalUsdt);
-          // console.log(apy);
-          // this.list[i].apy = apy ? apy.toFixed(2) : 0;
+          const apy = await getPoolApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
+          this.list[i].apy = apy ? apy.toFixed(2) : 0;
         }
       }
     },
@@ -504,6 +453,7 @@ export default {
     getRewards(callback, index) {
       const current = this.contracts.IFairLaunch;
       const contract = new Contract(current.abi, current.address);
+      console.log(index, '222');
       return contract.send('harvest', index, { from: this.account }, function(err, res) {
         if (!err) {
           console.log('get reward suncess', res);

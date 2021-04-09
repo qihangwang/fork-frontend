@@ -203,7 +203,6 @@ export default {
     },
   },
   created() {
-    console.log(this.account, this.chainIdError);
     if (this.account && !this.chainIdError) {
       this.init();
     }
@@ -235,23 +234,15 @@ export default {
     },
   },
   methods: {
-    async getPrice() {
-      const res = await this.$axios({
-        method: 'get',
-        url: 'https://api.pancakeswap.com/api/v1/price',
-      });
-      this.prices = res.data.prices;
-    },
     async init() {
       this.skeletonLoading = true;
-      await this.getPrice();
       await this.getPools();
       await this.checkAllowance();
       await this.getStakedVal();
       await this.getForkReward();
-      await this.getApys();
       this.update();
       this.skeletonLoading = false;
+      await this.getApys();
     },
     // The timer updates data every 10s
     async update() {
@@ -288,7 +279,7 @@ export default {
                 multiple,
                 totalAllocPoint,
                 status: 0,
-                apy: '0%',
+                apy: 'N/A',
                 staked: 0,
                 rewards: 0,
                 index,
@@ -390,16 +381,12 @@ export default {
             .div(new BigNumber(10).pow(18))
             .times(new BigNumber(2))
             .times(lpTokenRatio);
-          console.log(lpTokenRatio.toJSON(), lpTotalInQuoteToken.toJSON(), 222);
           this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
           this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
           const totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
             new BigNumber(this.list[i].lpTotalInQuoteToken),
           );
-          // const quotaTokenName = this.list[i].quoteToken.name;
-          // console.log(this.list[i].poolWeight.toJSON(), lpTotalInQuoteToken.toJSON(), quotaTokenName, '----apy---');
-          const apy = await getFarmApy(this.list[i].poolWeight, totalUsdt);
-          console.log(apy);
+          const apy = await getFarmApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
           this.list[i].apy = apy ? apy.toFixed(2) : 0;
           this.list[i].totalUsdt = totalUsdt.toFixed(4);
         }
