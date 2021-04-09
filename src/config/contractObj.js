@@ -4,30 +4,10 @@ import BUSDJSON from '../contract/MockDai.json';
 import ForkTokenJSON from '../contract/ForkToken.json';
 import IFairLaunchJSON from '../contract/IFairLaunch.json';
 import ForkFarmJSON from '../contract/ForkFarm.json';
+import UniswapV2FactoryJSON from '../contract/UniswapV2Factory.json';
+import UniswapV2RouterJSON from '../contract/UniswapV2Router.json';
 
-const EXPLORER_CONTRACT = {
-  56: {
-    URLS: 'https://bscscan.com',
-    FORK: '0xa9044F45039B798D21E02CB77F396A2d387cACdD',
-    CHECK: '',
-    MOON: '',
-    IFairLaunch: '',
-    ForkFarm: '',
-    WBNB: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    BUSD: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
-  },
-  97: {
-    URLS: 'https://testnet.bscscan.com',
-    FORK: '0xa3fd694c5cB6233beE7aCad94Cb11C57F157324A',
-    CHECK: '0xA951C3411B7b0B3F7d4BEB46BEa03694966aB7ed',
-    MOON: '0x0b9201E260FF82cb7e7A84215c281BFFba1B8857',
-    IFairLaunch: '0xc532450D578a907F541A45E6908ebbeb811fA99b',
-    ForkFarm: '0x69685FB51c612fa32c5B8faBcDbEbf48a8b8b011',
-    WBNB: "0x81D71b7e8366A5E3dbf4E9AD431997cEbe9088D8",
-    BUSD: "0x97CD44c56Cd8CF914B32eDfc2A7FdC537f20C21e"
-  },
-};
-
+import EXPLORER_CONTRACT from './contracts';
 const networkId = process.env.VUE_APP_NETWORK_ID;
 
 export default {
@@ -54,12 +34,12 @@ export default {
     abi: IERC20JSON,
     name: 'ERC',
   },
-  Fork: {
+  FORK: {
     abi: ForkTokenJSON,
     address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['FORK'] : '',
     name: 'Fork',
   },
-  Check: {
+  CHECK: {
     abi: IERC20JSON,
     address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['CHECK'] : '',
     name: 'Check',
@@ -73,5 +53,15 @@ export default {
     address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['ForkFarm'] : '',
     abi: ForkFarmJSON,
     name: 'ForkFarmJSON',
-  }
+  },
+  UniswapV2Factory: {
+    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId][' UniswapV2Factory'] : '',
+    abi: UniswapV2FactoryJSON,
+    name: 'UniswapV2Factory',
+  },
+  UniswapV2Router: {
+    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['UniswapV2Router'] : '',
+    abi: UniswapV2RouterJSON,
+    name: 'UniswapV2RouterJSON',
+  },
 };

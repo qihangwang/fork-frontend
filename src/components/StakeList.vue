@@ -138,7 +138,7 @@
 import Contract from '@/utils/contract';
 import { common } from '@/utils/common';
 import { getPoolApy } from '@/utils/common';
-import contracts from '@/utils/contractObj';
+import contracts from '@/config/contractObj';
 export default {
   name: 'StakeList',
   props: {

@@ -36,7 +36,7 @@
 </template>
 <script>
 import Contract from '@/utils/contract';
-import contracts from '@/utils/contractObj';
+import contracts from '@/config/contractObj';
 import { common } from '@/utils/common';
 import BigNumber from 'bignumber.js/bignumber';
 

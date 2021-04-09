@@ -57,7 +57,7 @@
 <script>
 import StakeList from '@/components/StakeList';
 import Contract from '@/utils/contract';
-import contracts from '@/utils/contractObj';
+import contracts from '@/config/contractObj';
 export default {
   name: 'Stake',
   components: {

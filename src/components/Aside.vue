@@ -1,6 +1,6 @@
 <!--
- * @Author: lenghui
- * @Description: 固定侧边导航栏
+ * @Author: 
+ * @Description: fixed nav
 -->
 <template>
   <div class="fixed-menu">
@@ -11,34 +11,37 @@
       <el-menu-item index="/farm">
         <span slot="title">Farm</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/earn">
-      <span slot="title">Eran</span>
-    </el-menu-item> -->
     </el-menu>
     <el-divider></el-divider>
     <div class="fixed-link">
       <el-col :span="24" class="item">
         <a>
-          <img src="https://alpaca-app-asset.s3-ap-southeast-1.amazonaws.com/icons/twitter.svg" />
+          <img src="https://i.loli.net/2021/04/09/Bm3l7vC4yWGxawd.png" />
           <span>Twitter</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
         <a>
-          <img src="https://alpaca-app-asset.s3-ap-southeast-1.amazonaws.com/icons/twitter.svg" />
+          <img src="https://i.loli.net/2021/04/09/bpNCDcI6SWXuwZ3.png" />
           <span>Telegram</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
         <a>
-          <img src="https://alpaca-app-asset.s3-ap-southeast-1.amazonaws.com/icons/twitter.svg" />
+          <img src="https://i.loli.net/2021/04/09/lJAcrTzSuPVyRft.png" />
           <span>Medium</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
         <a>
-          <img src="https://alpaca-app-asset.s3-ap-southeast-1.amazonaws.com/icons/twitter.svg" />
+          <img src="https://i.loli.net/2021/04/09/1ORhmZtpngLfUlC.png" />
           <span>Docs</span>
+        </a>
+      </el-col>
+       <el-col :span="24" class="item">
+        <a>
+          <img src="https://i.loli.net/2021/04/09/G63zadNgE45LXuk.png" />
+          <span>Announcement</span>
         </a>
       </el-col>
     </div>
