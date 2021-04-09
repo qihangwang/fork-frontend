@@ -5,7 +5,7 @@ const networkId = process.env.VUE_APP_NETWORK_ID;
 /* project info */
 const FarmProject = {
   '0': {
-    name: 'ALOZ',
+    name: 'Fork Finance',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
     links: {
       twitter: 'https://twitter.com/ForkFinance',
@@ -14,7 +14,7 @@ const FarmProject = {
     },
     coin: 'CAKE',
     desc:
-      'Alpaca Finance is a leveraged yield farming product, and using leveraged products involves certain risks. Please read here to understand these risks. As a user of our protocol, you are in agreement that you are aware of these risks, and that all liability resides with you. So please don’t invest your life savings, or risk assets you can’t afford to lose. Try to be as careful with your funds as we are with our code.',
+      'A defi factory on Binance Smart Chain that produces defi-project in a yield farming way',
     pools: {
       '0': {
         name: 'FORK-WBNB-LP',
@@ -41,8 +41,8 @@ const FarmProject = {
         },
       },
       '2': {
-        name: 'FORK-LP',
-        icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        name: 'FORK',
+        icon: 'https://fork-finance.org/ico_lg_1_64@2x.png',
         quoteToken: {
           name: 'FORK',
           address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -73,8 +73,8 @@ const FarmProject = {
         },
       },
       '5': {
-        name: 'CHECK-LP',
-        icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        name: 'CHECK',
+        icon: 'https://i.loli.net/2021/04/10/ZSrR1nNk7ygKhU9.png',
         quoteToken: {
           name: 'CHECK',
           address: EXPLORER_CONTRACT[networkId]['CHECK'],

@@ -13,7 +13,7 @@ async function checkProvider() {
 
 function startApp(provider) {
   // If the provider returned by detectEthereumProvider is not the same as
-  // window.ethereum, something is overwriting it, perhaps another wallet. 检测当前的钱包是不是小🦊
+  // window.ethereum, something is overwriting it, perhaps another wallet. 
   if (provider !== window.ethereum) {
     console.error('Do you have multiple wallets installed?');
   }

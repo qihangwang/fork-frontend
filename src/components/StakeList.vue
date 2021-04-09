@@ -17,7 +17,7 @@
             <p class="desc">
               {{ item.title }} <br />
               <span v-if="index == 0" class="desc-small"
-                >(Read a step-by-step guide on how to get the LP token <a class="green">here</a>)</span
+                >(Read a step-by-step guide on how to get the LP token <a href="https://docs.fork-finance.org/step-by-step-guide/deposit" class="green">here</a>)</span
               >
             </p>
             <el-collapse-item>
@@ -119,7 +119,7 @@
                   </el-col>
                 </el-col>
                 <el-col :md="6" :sm="24" :xs="24" class="flex-line flex-line-claim">
-                  <div class="line-title">Total Fork rewards:</div>
+                  <div class="line-title">Total FORK rewards:</div>
                   <div class="green total">{{ item.rewards.toFixed(2) }}</div>
                   <el-button
                     :type="item.rewards <= 0 ? 'info' : 'primary'"
@@ -251,14 +251,14 @@ export default {
         await contract.call('poolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
-              status: 0, // 是否授权
-              apy: 'N/A', //回报
-              tokenAdress: res.stakeToken, // 左边可质押的合约地址
-              stake: 0, //左边还可以质押了多少
+              status: 0, // is approve 
+              apy: 'N/A', // apy
+              tokenAdress: res.stakeToken, // left stake contract address
+              stake: 0, // left can stake amount?
               stakeInput: '',
-              unstake: 0, //右边还可以解押了多少
+              unstake: 0, // right stake amount?
               unstakeInput: '',
-              rewards: 0, //奖励
+              rewards: 0, // rewards
               multiple,
               totalAllocPoint,
               ...res,

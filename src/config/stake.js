@@ -5,9 +5,9 @@ const networkId = process.env.VUE_APP_NETWORK_ID;
 /* project info */
 const StakePools = [
   {
-    title: 'Stake FORK-WBNB LP token to earn FORK rewards',
-    name: 'FORK-WBNB LP',
-    imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
+    title: 'Stake FORK-BNB LP token to earn FORK rewards',
+    name: 'FORK-BNB LP',
+    imgs: ['https://fork-finance.org/ico_lg_1_64@2x.png', 'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png'],
     token: {
       name: 'FORK',
       address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -21,8 +21,8 @@ const StakePools = [
     title: 'Stake FORK-BUSD LP token to earn FORK rewards',
     name: 'FORK-BUSD LP',
     imgs: [
-      'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
-      'https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg',
+      'https://fork-finance.org/ico_lg_1_64@2x.png',
+      'https://exchange.pancakeswap.finance/images/coins/0xe9e7cea3dedca5984780bafc599bd69add087d56.png',
     ],
     token: {
       name: 'FORK',
@@ -34,9 +34,9 @@ const StakePools = [
     },
   },
   {
-    title: 'Stake Fork-WBNB LP token to earn FORK rewards',
-    name: 'Fork LP',
-    imgs: ['https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg'],
+    title: 'Stake FORK token to earn FORK rewards',
+    name: 'FORK',
+    imgs: ['https://fork-finance.org/ico_lg_1_64@2x.png'],
     quoteToken: {
       name: 'FORK',
       address: EXPLORER_CONTRACT[networkId]['FORK'],

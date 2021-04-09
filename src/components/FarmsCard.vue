@@ -48,12 +48,12 @@
                 <div class="base-flex base-flex-item-lits">
                   <div class="base-flex-content">Earn:</div>
                   <div class="flex-item-end base-flex-number">
-                    FORK
+                    CHECK
                   </div>
                 </div>
                 <div class="model-pan">
                   <div class="solo-title">
-                    <span>FORK</span>
+                    <span>CHECK</span>
                     <span>Earned</span>
                   </div>
                   <div class="base-flex base-flex-item-lits">

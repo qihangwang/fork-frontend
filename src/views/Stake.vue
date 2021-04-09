@@ -6,7 +6,7 @@
         <el-col :md="12" :sm="24">
           <div class="card-con card-flex">
             <div class="card-con-left">
-              <div class="earn-title">Fork earned :</div>
+              <div class="earn-title">FORK earned :</div>
               <div>
                 <van-skeleton class="h-skeleton" :row="1" :loading="totalSkeletonLoading" row-width="180">
                   <span class="earn-count">{{ total }}</span>
@@ -144,7 +144,6 @@ export default {
       if (walletLock) {
         this.walletLock = Number(web3js.utils.fromWei(walletLock, 'ether')).toFixed(2);
       }
-      // 钱包暂时没必要实时查询
       // this.timer = setTimeout(async () => {
       //   await this.getFork();
       // }, 5000);

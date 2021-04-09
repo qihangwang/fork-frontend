@@ -9,7 +9,7 @@
       <div class="header-left">
         <a href="/">
           <img src="https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png" />
-          <span>ForkCoin</span>
+          <span>Fork Finance</span>
         </a>
       </div>
       <div class="header-right">
