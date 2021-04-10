@@ -8,6 +8,16 @@
 .el-main {
     margin: 0 auto;
 }
+.el-menu-item.is-active::after {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    background: #03a9f4;
+    border-radius: 10px;
+    top: 16px;
+}
 // 修改默认btn
 .el-button--success.is-plain {
     border: 2px solid @themeColor;

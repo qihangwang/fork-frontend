@@ -218,7 +218,8 @@ export default {
         twitter: 'https://i.loli.net/2021/04/09/Bm3l7vC4yWGxawd.png',
         medium: 'https://i.loli.net/2021/04/09/bpNCDcI6SWXuwZ3.png',
         telegram: 'https://i.loli.net/2021/04/09/lJAcrTzSuPVyRft.png',
-        docs: 'https://i.loli.net/2021/04/09/1ORhmZtpngLfUlC.png',
+        github: 'https://i.loli.net/2021/04/10/xAlrf4k29SFNDPI.png',
+        website: 'https://i.loli.net/2021/04/10/YHRfnwAIDg24FNE.png',
       },
       modelType: '',
       modelVisable: false,
@@ -738,11 +739,11 @@ export default {
     margin-left: 4px;
   }
   .project-link-item {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: inline-block;
-    margin-right: 10px;
-    padding: 10px;
+    margin-right: 6px;
+    padding: 8px;
     background: #fff;
     display: inline-flex;
     border-radius: 50%;
