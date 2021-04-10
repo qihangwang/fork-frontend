@@ -6,19 +6,21 @@ const networkId = process.env.VUE_APP_NETWORK_ID;
 const FarmProject = {
   '0': {
     name: 'Fork Finance',
-    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+    icon: 'https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png',
     links: {
+      website: 'https://fork-finance.org',
       twitter: 'https://twitter.com/ForkFinance',
-      telegram: 'https://twitter.com/ForkFinance',
-      medium: 'https://twitter.com/ForkFinance',
+      telegram: 'https://t.me/forkfinance',
+      medium: 'https://fork-finance.medium.com/',
+      github: 'https://github.com/fork-finance',
     },
-    coin: 'CAKE',
+    coin: 'FORK',
     desc:
       'A defi factory on Binance Smart Chain that produces defi-project in a yield farming way',
     pools: {
       '0': {
-        name: 'FORK-WBNB-LP',
-        icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        name: 'FORK-BNB-LP',
+        icon: 'https://i.loli.net/2021/04/10/cv258anKxRmDLlE.png',
         token: {
           name: 'FORK',
           address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -30,7 +32,7 @@ const FarmProject = {
       },
       '1': {
         name: 'FORK-BUSD-LP',
-        icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        icon: 'https://i.loli.net/2021/04/10/xovDZaibX1547Bn.png',
         token: {
           name: 'FORK',
           address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -50,7 +52,7 @@ const FarmProject = {
       },
       '3': {
         name: 'CHECK-WBNB-LP',
-        icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        icon: 'https://i.loli.net/2021/04/10/xgN4RvmatbAVGWB.png',
         token: {
           name: 'CHECK',
           address: EXPLORER_CONTRACT[networkId]['CHECK'],
@@ -62,7 +64,7 @@ const FarmProject = {
       },
       '4': {
         name: 'CHECK-BUSD-LP',
-        icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        icon: 'https://i.loli.net/2021/04/10/RTjklcBEOyVPfGW.png',
         token: {
           name: 'CHECK',
           address: EXPLORER_CONTRACT[networkId]['CHECK'],

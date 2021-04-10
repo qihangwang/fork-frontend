@@ -15,31 +15,31 @@
     <el-divider></el-divider>
     <div class="fixed-link">
       <el-col :span="24" class="item">
-        <a>
+        <a href="https://twitter.com/ForkFinance">
           <img src="https://i.loli.net/2021/04/09/Bm3l7vC4yWGxawd.png" />
           <span>Twitter</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a>
+        <a href="https://t.me/forkfinance">
           <img src="https://i.loli.net/2021/04/09/bpNCDcI6SWXuwZ3.png" />
           <span>Telegram</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a>
+        <a href="https://fork-finance.medium.com/">
           <img src="https://i.loli.net/2021/04/09/lJAcrTzSuPVyRft.png" />
           <span>Medium</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a>
+        <a href="https://docs.fork-finance.org/">
           <img src="https://i.loli.net/2021/04/09/1ORhmZtpngLfUlC.png" />
           <span>Docs</span>
         </a>
       </el-col>
        <el-col :span="24" class="item">
-        <a>
+        <a href="https://t.me/forkfinance_announcement">
           <img src="https://i.loli.net/2021/04/09/G63zadNgE45LXuk.png" />
           <span>Announcement</span>
         </a>
