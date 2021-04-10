@@ -1,6 +1,37 @@
 <template>
   <div class="list">
     <van-skeleton :row="8" class="m-skeleton skeleton" :loading="skeletonLoading">
+      <!-- <el-row v-for="(farm, key, index) in renderList1" :key="index">
+        <template>
+          <div class="project-box">
+            <div class="project">
+              <img class="project-img" :src="farm.project.icon" />
+              <div>
+                <p class="project-name">
+                  {{ farm.project.name }} <span class="project-coin">{{ farm.project.coin }}</span>
+                </p>
+                <div class="project-link">
+                  <a
+                    class="project-link-item"
+                    v-for="(src, key, index) in farm.project.links"
+                    :class="key"
+                    :key="index"
+                    :href="src"
+                    target="_blank"
+                  >
+                    <img :src="icons[key]" />
+                  </a>
+                </div>
+
+                <div class="project-desc">{{ farm.project.desc }}</div>
+              </div>
+            </div>
+            <div class="project-right">
+              <span>Project duration Farms: </span>
+              <span>{{ farm.project.start }} / {{ farm.project.end }}</span>
+            </div>
+          </div>
+        </template> -->
       <el-row :gutter="20" type="flex" class="card-con">
         <template v-for="(item, index) of renderList">
           <el-col :key="index" :lg="8" :md="12" :sm="24">
@@ -101,7 +132,7 @@
                   <div class="split-line"></div>
                   <el-collapse>
                     <el-collapse-item title="Details" name="1" class="hide-pan">
-                      <div class="base-flex base-flex-item-lits" v-if="item.allocPoint != 0">
+                      <div class="base-flex base-flex-item-lits">
                         <div class="base-flex-content">Total Liquidity</div>
                         <div class="flex-item-end base-flex-number">${{ item.totalUsdt }}</div>
                       </div>
@@ -138,6 +169,7 @@
           <div>No data temporarily</div>
         </div>
       </el-row>
+      <!-- </el-row> -->
     </van-skeleton>
     <Model
       :visable="modelVisable"
@@ -173,6 +205,7 @@ export default {
       contracts,
       skeletonLoading: true,
       poolsLength: 0,
+      farms: {},
       list: [],
       icons: {
         twitter: 'https://i.loli.net/2021/04/09/Bm3l7vC4yWGxawd.png',
@@ -201,6 +234,16 @@ export default {
         return false;
       });
     },
+    // renderList1() {
+    //   const farms = {};
+    //   this.list.forEach(item => {
+    //     farms[item.projectId] = farms[item.projectId] || {};
+    //     farms[item.projectId].project = FarmProject[item.projectId];
+    //     farms[item.projectId].pools = farms[item.projectId].pools || [];
+    //     farms[item.projectId].pools.push(item);
+    //   });
+    //   return farms;
+    // },
   },
   created() {
     if (this.account && !this.chainIdError) {
@@ -265,14 +308,17 @@ export default {
         const multiple = await contract.call('BONUS_MULTIPLIER'); //multiple
         const totalAllocPoint = await contract.call('totalAllocPoint'); //multiple
         let arr = [];
+        // let farms = {};
         for (let index = 0; index < this.poolsLength; index++) {
           // alreay get pool stakeval and total
           await contract.call('poolInfo', index, function(err, res) {
             if (!err) {
-              res.project = FarmProject[res.projectId];
-              res.pool = res.project ? res.project.pools[index] : undefined;
-              res.quoteToken = res.project ? res.project.pools[index]['quoteToken'] : undefined;
-              res.token = res.project ? res.project.pools[index]['token'] : undefined;
+              const project = FarmProject[res.projectId];
+              res.project = project;
+              // const project = FarmProject[res.projectId];
+              res.pool = project ? project.pools[index] : undefined;
+              res.quoteToken = project ? project.pools[index]['quoteToken'] : undefined;
+              res.token = project ? project.pools[index]['token'] : undefined;
               res.lpSupply = web3js.utils.fromWei(res.lpSupply, 'ether');
               const obj = {
                 ...res,
@@ -284,10 +330,15 @@ export default {
                 rewards: 0,
                 index,
               };
+              // farms[res.projectId] = farms[res.projectId] || {};
+              // farms[res.projectId].project = project;
+              // farms[res.projectId].pools = farms[res.projectId].pools || [];
+              // farms[res.projectId].pools.push(obj);
               arr.push(obj);
             }
           });
         }
+        // this.farms = farms;
         this.list = arr;
       } catch {
         console.log('get pool length error');
@@ -376,6 +427,7 @@ export default {
         // 2 comput lpTotalInQuoteToken
         if (totalSupply) {
           const lpTotalSupply = web3js.utils.fromWei(totalSupply, 'ether');
+          // lp
           const lpTokenRatio = new BigNumber(this.list[i].lpSupply).div(new BigNumber(lpTotalSupply));
           const lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
             .div(new BigNumber(10).pow(18))
@@ -383,9 +435,13 @@ export default {
             .times(lpTokenRatio);
           this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
           this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
-          const totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
+          let totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
             new BigNumber(this.list[i].lpTotalInQuoteToken),
           );
+          // Single currency pledge
+          if (this.list[i].token == undefined) {
+            totalUsdt = new BigNumber(this.list[i].lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
+          }
           const apy = await getFarmApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
           this.list[i].apy = apy ? apy.toFixed(2) : 0;
           this.list[i].totalUsdt = totalUsdt.toFixed(4);
@@ -612,6 +668,24 @@ export default {
     margin-bottom: 10px;
   }
 }
+.project-box {
+  display: flex;
+  padding: 10px;
+  background: #feeed7;
+  border-radius: 12px;
+  align-items: center;
+}
+.project-right {
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  > span:last-child {
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
 .project {
   display: flex;
   align-items: center;
@@ -626,12 +700,15 @@ export default {
     font-weight: bold;
   }
   &-coin {
-    background: #fff;
-    color: #000;
+    background: #ededed;
+    color: #607d8b;
     border-radius: 16px;
     padding: 3px 16px;
     margin-top: 6px;
     display: inline-block;
+    box-shadow: rgba(14, 14, 44, 0.1) 0px -1px 0px 0px inset;
+    font-size: 13px;
+    margin-left: 4px;
   }
   .project-link-item {
     width: 36px;
@@ -649,13 +726,13 @@ export default {
 }
 .project-desc {
   text-align: left;
-  margin: 10px 0 20px;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  padding-left: 60px;
+  font-size: 14px;
+  margin-top: 10px;
 }
 .multipe {
   border-radius: 16px;
@@ -697,6 +774,28 @@ export default {
   .van-skeleton__row {
     width: 100% !important;
     height: 100%;
+  }
+}
+@media (max-width: 767px) {
+  .project-coin {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 991px) {
+  .project-box {
+    flex-direction: column;
+  }
+  .project-right {
+    padding-left: 70px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 14px;
+    > span:last-child {
+      font-size: 16px;
+    }
   }
 }
 </style>

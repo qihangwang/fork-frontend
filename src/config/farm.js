@@ -15,8 +15,9 @@ const FarmProject = {
       github: 'https://github.com/fork-finance',
     },
     coin: 'FORK',
-    desc:
-      'A defi factory on Binance Smart Chain that produces defi-project in a yield farming way',
+    desc: 'A defi factory on Binance Smart Chain that produces defi-project in a yield farming way',
+    start: '2020-04-01',
+    end: '2020-04-30',
     pools: {
       '0': {
         name: 'FORK-BNB-LP',
@@ -80,7 +81,7 @@ const FarmProject = {
         quoteToken: {
           name: 'CHECK',
           address: EXPLORER_CONTRACT[networkId]['CHECK'],
-        }
+        },
       },
     },
   },

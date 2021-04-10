@@ -372,9 +372,12 @@ export default {
           this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
           this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
           // console.log(quoteTokenBalanceLP, lpSupply, lpTotalSupply,lpTokenRatio.toJSON(), lpTotalInQuoteToken.toJSON());
-          const totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
+          let totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
             new BigNumber(this.list[i].lpTotalInQuoteToken),
           );
+          if (this.list[i].token == undefined) {
+            totalUsdt = new BigNumber(this.list[i].lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
+          }
           const apy = await getPoolApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
           this.list[i].apy = apy ? apy.toFixed(2) : 0;
         }
