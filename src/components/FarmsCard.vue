@@ -100,7 +100,13 @@
                         v-if="item.status == 0"
                         >Harvest</el-button
                       >
-                      <el-button v-else :disabled="item.rewards == 0" type="primary custom-border">Harvest</el-button>
+                      <el-button
+                        v-else
+                        :disabled="item.rewards == 0"
+                        @click="harvest(item, index)"
+                        type="primary custom-border"
+                        >Harvest</el-button
+                      >
                     </div>
                   </div>
                   <div class="solo-title">
@@ -191,6 +197,7 @@ import { getFarmApy, getPriceBusd } from '@/utils/apy';
 import contracts from '@/config/contractObj';
 import FarmProject from '@/config/farm.js';
 import Model from './Model.vue';
+
 export default {
   name: 'FarmsCard',
   props: {
@@ -465,6 +472,24 @@ export default {
       return contract.approve(target.address, quota, { from: this.account }, function(err, res) {
         if (!err) {
           console.log('授权成功');
+          callback(res);
+        }
+      });
+    },
+    // operating harvest token
+    async harvest(item, index) {
+      console.log(res);
+      let res = await common(this.getHarvest, index);
+      if (res) {
+        item.rewards = 0;
+      }
+    },
+    async getHarvest(callback, index) {
+      const current = this.contracts.ForkFarm;
+      const contract = new Contract(current.abi, current.address);
+      return contract.send('harvest', index, { from: this.account }, function(err, res) {
+        if (!err) {
+          console.log('get reward suncess', res);
           callback(res);
         }
       });
