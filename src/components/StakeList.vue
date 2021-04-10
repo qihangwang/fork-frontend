@@ -12,12 +12,13 @@
     </p>
     <div class="list">
       <van-skeleton :row="6" class="m-skeleton skeleton" :loading="skeletonLoading">
-        <el-collapse>
+        <el-collapse v-if="list.length > 0">
           <div v-for="(item, index) in list" :key="index">
             <p class="desc">
               {{ item.title }} <br />
               <span v-if="index == 0" class="desc-small"
-                >(Read a step-by-step guide on how to get the LP token <a href="https://docs.fork-finance.org/step-by-step-guide/deposit" class="green">here</a>)</span
+                >(Read a step-by-step guide on how to get the LP token
+                <a href="https://docs.fork-finance.org/step-by-step-guide/deposit" class="green">here</a>)</span
               >
             </p>
             <el-collapse-item>
@@ -135,6 +136,7 @@
             </el-collapse-item>
           </div>
         </el-collapse>
+        <Wait v-else />
       </van-skeleton>
     </div>
   </div>
@@ -146,9 +148,13 @@ import contracts from '@/config/contractObj';
 import BigNumber from 'bignumber.js';
 import { getPoolApy, getPriceBusd } from '@/utils/apy';
 import StakePools from '@/config/stake.js';
+import Wait from './Wait';
 
 export default {
   name: 'StakeList',
+  components: {
+    Wait
+  },
   props: {
     data: Object,
   },
@@ -251,7 +257,7 @@ export default {
         await contract.call('poolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
-              status: 0, // is approve 
+              status: 0, // is approve
               apy: 'N/A', // apy
               tokenAdress: res.stakeToken, // left stake contract address
               stake: 0, // left can stake amount?
@@ -376,7 +382,7 @@ export default {
             new BigNumber(this.list[i].lpTotalInQuoteToken),
           );
           if (this.list[i].token == undefined) {
-            totalUsdt = new BigNumber(this.list[i].lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
+            totalUsdt = new BigNumber(lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
           }
           const apy = await getPoolApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
           this.list[i].apy = apy ? apy.toFixed(2) : 0;

@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <van-skeleton :row="8" class="m-skeleton skeleton" :loading="skeletonLoading">
+    <van-skeleton :row="9" class="m-skeleton skeleton" :loading="skeletonLoading">
       <!-- <el-row v-for="(farm, key, index) in renderList1" :key="index">
         <template>
           <div class="project-box">
@@ -32,7 +32,7 @@
             </div>
           </div>
         </template> -->
-      <el-row :gutter="20" type="flex" class="card-con">
+      <el-row :gutter="20" type="flex" class="card-con" v-if="list.length > 0">
         <template v-for="(item, index) of renderList">
           <el-col :key="index" :lg="8" :md="12" :sm="24">
             <div class="base-card">
@@ -175,6 +175,7 @@
           <div>No data temporarily</div>
         </div>
       </el-row>
+      <Wait v-else />
       <!-- </el-row> -->
     </van-skeleton>
     <Model
@@ -197,6 +198,7 @@ import { getFarmApy, getPriceBusd } from '@/utils/apy';
 import contracts from '@/config/contractObj';
 import FarmProject from '@/config/farm.js';
 import Model from './Model.vue';
+import Wait from './Wait';
 
 export default {
   name: 'FarmsCard',
@@ -205,6 +207,7 @@ export default {
   },
   components: {
     Model,
+    Wait,
   },
   data() {
     return {
