@@ -145,7 +145,9 @@ import { common } from '@/utils/common';
 import contracts from '@/config/contractObj';
 import BigNumber from 'bignumber.js';
 import { getPoolApy, getPriceBusd } from '@/utils/apy';
-import StakePools from '@/config/stake.js';
+import stakeConfig from '@/config/stake.js';
+
+const StakePools = stakeConfig[process.env.VUE_APP_NETWORK_ID];
 
 export default {
   name: 'StakeList',
@@ -245,7 +247,7 @@ export default {
         console.log('error');
       }
       let arr = [];
-      const multiple = await contract.call('bonusMultiplier'); //multiple
+      const multiple = process.env.VUE_APP_NETWORK_ID == '97' ? 8 : await contract.call('bonusMultiplier'); //multiple
       const totalAllocPoint = await contract.call('totalAllocPoint'); //multiple
       for (let i = 0; i < this.poolsLength; i++) {
         await contract.call('poolInfo', i, function(err, res) {
@@ -376,7 +378,7 @@ export default {
             new BigNumber(this.list[i].lpTotalInQuoteToken),
           );
           if (this.list[i].token == undefined) {
-            totalUsdt = new BigNumber(this.list[i].lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
+            totalUsdt = new BigNumber(lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
           }
           const apy = await getPoolApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
           this.list[i].apy = apy ? apy.toFixed(2) : 0;

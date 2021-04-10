@@ -1,14 +1,20 @@
 #!/usr/bin/expect
 set timeout 30
-set host test-contract.learn-go.com
-set username root
-set password *y9461015
 set src_file [lindex $argv 0]
-set dest_file /data/www/test-contract
-spawn scp $src_file $username@$host:$dest_file
-#scp /Users/lenghui/Desktop/demo.apk root@10.138.1.11:/root/www/htdocs/apk
+set host [lindex $argv 1]
+set username [lindex $argv 2]
+set password [lindex $argv 3]
+
+set dest_path /data/www/app
+
+set remote_tmp_path /home/$username
+set file_name [exec basename $src_file]
+
+set dest_file $dest_path/$file_name
+set remote_tmp_file $remote_tmp_path/$file_name
+
+spawn scp $src_file $username@$host:/home/$username
 expect {
- # 初次登录会询问"yes/no"，所以如果截取的是"yes/no"就 send 发送一个yes，\r是回车的意思，exp_continue表示继续
  "(yes/no"
   {
     send "yes\n"
@@ -29,9 +35,12 @@ expect {
   }
 }
 expect "#"
-send "cd /data/www/test-contract/\r"
-send "tar -xvf fork.tar\r"
-send "rm -rf fork.tar\r"
+send "sudo -s\r"
+send "mv $remote_tmp_file $dest_path\r"
+send "cd $dest_path\r"
+send "tar -xvf ./$file_name\r"
+send "rm -f $dest_file\r"
+send "exit\r"
 send "exit\r"
 expect eof
-interact
+#interact

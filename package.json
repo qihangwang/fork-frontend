@@ -1,10 +1,11 @@
 {
-  "name": "fork",
+  "name": "fork-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:test": "vue-cli-service build --mode test",
     "lint": "vue-cli-service lint",
     "analyzer": "use_analyzer=true npm run build"
   },

@@ -4,7 +4,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
 module.exports = {
   publicPath: process.env.PUBLIC_PATH,
-  outputDir: 'fork',
+  outputDir: 'dist',
   lintOnSave: true,
   assetsDir: process.env.NODE_ENV !== 'development' ? 'assets' : 'dev-assets',
   indexPath: 'index.html',

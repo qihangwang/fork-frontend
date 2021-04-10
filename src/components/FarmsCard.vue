@@ -195,9 +195,9 @@ import Contract from '@/utils/contract';
 import { common } from '@/utils/common';
 import { getFarmApy, getPriceBusd } from '@/utils/apy';
 import contracts from '@/config/contractObj';
-import FarmProject from '@/config/farm.js';
+import farmConfig from '@/config/farm.js';
 import Model from './Model.vue';
-
+const FarmProject = farmConfig[process.env.VUE_APP_NETWORK_ID];
 export default {
   name: 'FarmsCard',
   props: {
@@ -313,7 +313,7 @@ export default {
             that.poolsLength = res;
           }
         });
-        const multiple = await contract.call('BONUS_MULTIPLIER'); //multiple
+        const multiple = process.env.VUE_APP_NETWORK_ID == '97' ? 8 : await contract.call('BONUS_MULTIPLIER'); //multiple
         const totalAllocPoint = await contract.call('totalAllocPoint'); //multiple
         let arr = [];
         // let farms = {};
