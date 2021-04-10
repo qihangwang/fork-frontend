@@ -31,18 +31,18 @@ const FarmProject = {
           address: EXPLORER_CONTRACT[networkId]['WBNB'],
         },
       },
-      '1': {
-        name: 'FORK-BUSD-LP',
-        icon: 'https://i.loli.net/2021/04/10/xovDZaibX1547Bn.png',
-        token: {
-          name: 'FORK',
-          address: EXPLORER_CONTRACT[networkId]['FORK'],
-        },
-        quoteToken: {
-          name: 'BUSD',
-          address: EXPLORER_CONTRACT[networkId]['BUSD'],
-        },
-      },
+      // '1': {
+      //   name: 'FORK-BUSD-LP',
+      //   icon: 'https://i.loli.net/2021/04/10/xovDZaibX1547Bn.png',
+      //   token: {
+      //     name: 'FORK',
+      //     address: EXPLORER_CONTRACT[networkId]['FORK'],
+      //   },
+      //   quoteToken: {
+      //     name: 'BUSD',
+      //     address: EXPLORER_CONTRACT[networkId]['BUSD'],
+      //   },
+      // },
       '2': {
         name: 'FORK',
         icon: 'https://fork-finance.org/ico_lg_1_64@2x.png',
@@ -63,18 +63,18 @@ const FarmProject = {
           address: EXPLORER_CONTRACT[networkId]['WBNB'],
         },
       },
-      '4': {
-        name: 'CHECK-BUSD-LP',
-        icon: 'https://i.loli.net/2021/04/10/RTjklcBEOyVPfGW.png',
-        token: {
-          name: 'CHECK',
-          address: EXPLORER_CONTRACT[networkId]['CHECK'],
-        },
-        quoteToken: {
-          name: 'WBNB',
-          address: EXPLORER_CONTRACT[networkId]['WBNB'],
-        },
-      },
+      // '4': {
+      //   name: 'CHECK-BUSD-LP',
+      //   icon: 'https://i.loli.net/2021/04/10/RTjklcBEOyVPfGW.png',
+      //   token: {
+      //     name: 'CHECK',
+      //     address: EXPLORER_CONTRACT[networkId]['CHECK'],
+      //   },
+      //   quoteToken: {
+      //     name: 'WBNB',
+      //     address: EXPLORER_CONTRACT[networkId]['WBNB'],
+      //   },
+      // },
       '5': {
         name: 'CHECK',
         icon: 'https://i.loli.net/2021/04/10/ZSrR1nNk7ygKhU9.png',

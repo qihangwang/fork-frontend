@@ -311,11 +311,13 @@ export default {
         // let farms = {};
         for (let index = 0; index < this.poolsLength; index++) {
           // alreay get pool stakeval and total
+
           await contract.call('poolInfo', index, function(err, res) {
             if (!err) {
               const project = FarmProject[res.projectId];
               res.project = project;
               // const project = FarmProject[res.projectId];
+              if (typeof project.pools[index] == 'undefined') return;
               res.pool = project ? project.pools[index] : undefined;
               res.quoteToken = project ? project.pools[index]['quoteToken'] : undefined;
               res.token = project ? project.pools[index]['token'] : undefined;
@@ -348,7 +350,7 @@ export default {
     async checkAllowance() {
       const that = this;
       const pools = this.contracts.ForkFarm;
-      for (let index = 0; index < this.poolsLength; index++) {
+      for (let index = 0; index < this.list.length; index++) {
         const contract = new Contract(
           this.contracts['ERC20'].abi,
           this.list[index].stakeToken,
@@ -374,7 +376,7 @@ export default {
       const that = this;
       const pool = this.contracts.ForkFarm;
       const contract = new Contract(pool.abi, pool.address, pool.name);
-      for (let i = 0; i < this.poolsLength; i++) {
+      for (let i = 0; i < this.list.length; i++) {
         if (this.list[i].status !== 0) {
           await contract.call('userInfo', [i, this.account], { from: this.account }, function(err, res) {
             if (!err) {
@@ -389,7 +391,7 @@ export default {
       const that = this;
       const pool = this.contracts.ForkFarm;
       const contract = new Contract(pool.abi, pool.address, pool.name);
-      for (let i = 0; i < this.poolsLength; i++) {
+      for (let i = 0; i < this.list.length; i++) {
         if (this.list[i].status !== 0) {
           await contract.call('pendingCheck', [i, this.account], { from: this.account }, function(err, res) {
             if (!err) {
