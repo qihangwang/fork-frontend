@@ -118,7 +118,7 @@
                       >Approve</el-button
                     >
                     <div v-else class="stake-line">
-                      <span class="bold-num">{{ item.staked }}</span>
+                      <span class="bold-num">{{ item.staked>0?Number(item.staked).toFixed(3):0 }}</span>
                       <el-button
                         v-if="item.staked == 0"
                         type="primary custom-border"

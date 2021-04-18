@@ -55,7 +55,7 @@ export const getPriceBusd = async type => {
  */
 
 export const getFarmApy = async (poolWeight, poolLiquidityUsdt, multiple) => {
-  if (poolLiquidityUsdt.toString() == '0') poolLiquidityUsdt = new BigNumber(1);
+  if (poolLiquidityUsdt.toString() == '0') poolLiquidityUsdt = new BigNumber('0.01');
   const cakePriceUsd = await getPriceBusd('CHECK');
   const yearlyCakeRewardAllocation = CAKE_PER_BLOCK.times(BLOCKS_PER_YEAR).times(poolWeight);
   const apy = yearlyCakeRewardAllocation
@@ -67,7 +67,7 @@ export const getFarmApy = async (poolWeight, poolLiquidityUsdt, multiple) => {
 };
 
 export const getPoolApy = async (poolWeight, poolLiquidityUsdt, multiple) => {
-  if (poolLiquidityUsdt.toString() == '0') poolLiquidityUsdt = new BigNumber(1);
+  if (poolLiquidityUsdt.toString() == '0') poolLiquidityUsdt = new BigNumber('0.01');
   const cakePriceUsd = await getPriceBusd('FORK');
   const yearlyCakeRewardAllocation = FORK_PER_BLOCK.times(BLOCKS_PER_YEAR).times(poolWeight);
   const apy = yearlyCakeRewardAllocation

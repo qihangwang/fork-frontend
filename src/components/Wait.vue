@@ -2,7 +2,7 @@
   <div class="wait">
     <div class="con">
       <div class="ant-img">
-        <img src="https://img.bee-cdn.com/large/3b9ae203lz1gonu6yvykvj20e80e8tbi.jpg" />
+        <!-- <img src="https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png" /> -->
       </div>
       <p>Not yet open, please wait patiently!</p>
     </div>
