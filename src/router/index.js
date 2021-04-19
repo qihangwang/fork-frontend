@@ -16,6 +16,11 @@ const routes = [
     component: () => import('../views/Farm.vue'),
   },
   {
+    path: '/cash',
+    name: 'Cash',
+    component: () => import('../views/Cash.vue'),
+  },
+  {
     path: '*',
     redirect: { name: 'Stake' },
   },

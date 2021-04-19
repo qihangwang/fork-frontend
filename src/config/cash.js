@@ -3,7 +3,7 @@ import EXPLORER_CONTRACT from './contracts';
 const networkId = process.env.VUE_APP_NETWORK_ID;
 
 /* project info */
-const FarmProject = {
+const CashProject = {
   '97': {
     '0': {
       name: 'Fork Finance',
@@ -140,4 +140,4 @@ const FarmProject = {
   },
 };
 
-export default FarmProject;
+export default CashProject;

@@ -8,7 +8,10 @@ const StakePools = {
     {
       title: 'Stake FORK-BNB LP token to earn FORK rewards',
       name: 'FORK-BNB LP',
-      imgs: ['https://fork-finance.org/ico_lg_1_64@2x.png', 'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png'],
+      imgs: [
+        'https://fork-finance.org/ico_lg_1_64@2x.png',
+        'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png',
+      ],
       token: {
         name: 'FORK',
         address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -22,8 +25,8 @@ const StakePools = {
       title: 'Stake FORK-BUSD LP token to earn FORK rewards',
       name: 'FORK-BUSD LP',
       imgs: [
-      'https://fork-finance.org/ico_lg_1_64@2x.png',
-      'https://exchange.pancakeswap.finance/images/coins/0xe9e7cea3dedca5984780bafc599bd69add087d56.png',
+        'https://fork-finance.org/ico_lg_1_64@2x.png',
+        'https://exchange.pancakeswap.finance/images/coins/0xe9e7cea3dedca5984780bafc599bd69add087d56.png',
       ],
       token: {
         name: 'FORK',
@@ -48,7 +51,10 @@ const StakePools = {
     {
       title: 'Stake FORK-BNB LP token to earn FORK rewards',
       name: 'FORK-BNB LP',
-      imgs: ['https://fork-finance.org/ico_lg_1_64@2x.png', 'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png'],
+      imgs: [
+        'https://fork-finance.org/ico_lg_1_64@2x.png',
+        'https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png',
+      ],
       token: {
         name: 'FORK',
         address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -67,7 +73,7 @@ const StakePools = {
         address: EXPLORER_CONTRACT[networkId]['FORK'],
       },
     },
-  ]
-}
+  ],
+};
 
 export default StakePools;
