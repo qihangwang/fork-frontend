@@ -8,8 +8,9 @@ const EXPLORER_CONTRACT = {
     ForkFarm: '',
     WBNB: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     BUSD: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-    UniswapV2Factory: '',
-    UniswapV2Router: '',
+    UniswapV2Factory: '0xBCfCcbde45cE874adCB698cC183deBcF17952812',
+    UniswapV2Router: '0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F',
+    ALPACA: '0x8f0528ce5ef7b51152a59745befdd91d97091d2f',
   },
   97: {
     URLS: 'https://testnet.bscscan.com',
@@ -22,6 +23,7 @@ const EXPLORER_CONTRACT = {
     BUSD: '0x97CD44c56Cd8CF914B32eDfc2A7FdC537f20C21e',
     UniswapV2Factory: '0x6b0f1af62b1bf419C83BF660603C59F3a951592A',
     UniswapV2Router: '0x799df6358883742b576757457008d76813707aA2',
+    ALPACA: '0xF146322133a35e347900980209f501a2a5eAE8D1'
   },
 };
 export default EXPLORER_CONTRACT;

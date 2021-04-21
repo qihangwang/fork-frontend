@@ -68,6 +68,14 @@ const FarmProject = {
             address: EXPLORER_CONTRACT[networkId]['BUSD'],
           },
         },
+        '5': {
+          name: 'ALPACA',
+          icon: 'https://alpaca-app-asset.s3-ap-southeast-1.amazonaws.com/logo512.png',
+          quoteToken: {
+            name: 'ALPACA',
+            address: EXPLORER_CONTRACT[networkId]['ALPACA'],
+          },
+        },
       },
     },
   },
