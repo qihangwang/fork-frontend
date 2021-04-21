@@ -167,7 +167,7 @@ export default {
         const chainId = await web3js.eth.getChainId();
         this.$store.dispatch('changeAccount', accounts[0]);
         this.$store.dispatch('changeChain', { key: 'chainId', val: chainId });
-        if (chainId !== process.env.VUE_APP_NETWORK_ID) {
+        if (chainId != process.env.VUE_APP_NETWORK_ID) {
           this.connectError = true;
           this.connectErrorMessage = `Unsupported chain id: ${chainId}. Supported chain id is: ${process.env.VUE_APP_NETWORK_ID}.`;
           console.log('connetc chaid error');

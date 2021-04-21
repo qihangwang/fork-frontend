@@ -9,15 +9,15 @@
   >
     <template>
       <span slot="title">
-        <h3 class="title">{{ type }} LP Tokens</h3>
+        <h3 class="title">{{ type }} Tokens</h3>
       </span>
       <van-skeleton :row="1" class="m-skeleton one-line-skeleton" :loading="account == '' || skeletonLoading">
         <div class="flex">
-          <p class="over">Name : {{ name }} LP</p>
+          <p class="over">{{ type }} Name : {{ name }}</p>
           <p class="over">Balance : {{ maxVal == 0 ? 0 : Number(maxVal).toFixed(3) }}</p>
         </div>
         <el-input
-          placeholder="please input number"
+          placeholder="please input vaild number"
           class="input"
           :value="val"
           @input="changeVal"
@@ -43,12 +43,21 @@ import BigNumber from 'bignumber.js/bignumber';
 export default {
   name: 'Model',
   props: {
+    name: String,
     type: String,
     data: Object,
     visable: Boolean,
     onOk: Function,
     onCanel: Function,
     onClose: Function,
+    depositMethods: {
+      type: String,
+      default: 'deposit',
+    },
+    withdrawMethods: {
+      type: String,
+      default: 'withdraw',
+    },
   },
   data() {
     return {
@@ -67,9 +76,6 @@ export default {
     account() {
       return this.$store.state.account;
     },
-    name() {
-      return this.data.pool ? this.data.pool.name : '';
-    },
   },
   watch: {
     visable() {
@@ -82,6 +88,7 @@ export default {
   methods: {
     // getbalance user
     async getBalance() {
+      this.skeletonLoading = true;
       try {
         if (this.type == 'Stake') {
           const contract = new Contract(
@@ -113,7 +120,7 @@ export default {
       const current = this.contracts.ForkFarm;
       const amount = web3js.utils.toWei(String(val), 'ether');
       const contract = new Contract(current.abi, current.address, current.name);
-      return contract.send('deposit', [index, amount], { from: this.account }, function(err, res) {
+      return contract.send(this.depositMethods, [index, amount], { from: this.account }, function(err, res) {
         if (!err) {
           console.log('get deposit sucess', res);
           callback(res);
@@ -125,7 +132,7 @@ export default {
       const current = this.contracts.ForkFarm;
       const amount = web3js.utils.toWei(String(val), 'ether');
       const contract = new Contract(current.abi, current.address);
-      return contract.send('withdraw', [index, amount], { from: this.account }, function(err, res) {
+      return contract.send(this.withdrawMethods, [index, amount], { from: this.account }, function(err, res) {
         if (!err) {
           console.log('get widtdraw sucess', res);
           callback(res);

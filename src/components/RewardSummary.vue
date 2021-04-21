@@ -106,6 +106,9 @@ export default {
       this.total = val;
       this.totalSkeletonLoading = false;
     });
+    Bus.$on('changeHarvest', () => {
+      this.getCheck();
+    });
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.getWidth);
@@ -258,7 +261,7 @@ export default {
   .sum-title {
     font-size: 16px;
   }
-  .card-con  {
+  .card-con {
     border-radius: 0;
   }
 }
@@ -274,7 +277,7 @@ export default {
   }
 }
 @media only screen and (min-width: 1200px) {
-   .card-con .card-con-right img {
+  .card-con .card-con-right img {
     width: 9rem;
   }
 }

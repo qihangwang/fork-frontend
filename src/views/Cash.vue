@@ -1,12 +1,11 @@
 <template>
   <div class="container">
-    <div class="top card">
+    <div class="card top">
       <h2 class="top-title">IFO: Initial Farm Offerings</h2>
       <p class="top-desc">Buy new tokens with a brand new token sale model.</p>
     </div>
     <div class="card con">
       <LargeSwitch :value.sync="SwitchState" :textArr="['OTG  IDFO', 'Past IDFO']" />
-      <el-divider></el-divider>
       <CashList :type="SwitchState" />
     </div>
   </div>
@@ -40,11 +39,23 @@ export default {
   min-height: 750px;
 }
 @media only screen and (max-width: 767px) {
+  .con {
+    padding-bottom: 30px;
+  }
+  .top {
+    padding: 30px 10px;
+  }
 }
 @media only screen and (max-width: 991px) {
 }
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 1024px) {
+  .top {
+    padding: 50px 30px;
+  }
 }
 @media only screen and (min-width: 1200px) {
+  .top {
+    padding: 50px 30px;
+  }
 }
 </style>

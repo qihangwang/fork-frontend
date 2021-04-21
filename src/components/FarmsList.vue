@@ -152,6 +152,7 @@
       :onOk="closeModel"
       :type="modelType"
       :data="activeItem"
+      :name="activeItem.pool && activeItem.pool.name"
       :onCanel="closeModel"
       :onClose="closeModel"
       ref="model"
@@ -369,11 +370,7 @@ export default {
           });
         }
       }
-      const sum = this.list.reduce(function(prev, cur) {
-        return new BigNumber(prev).plus(new BigNumber(cur.rewards));
-      }, 0);
-      console.log(sum.toString(), 'sum');
-      Bus.$emit('changeEarn', sum);
+      this.computeSum();
     },
     // four
     async getApys() {
@@ -437,17 +434,18 @@ export default {
       const contract = new Contract(this.contracts['ERC20'].abi, address, this.contracts['ERC20'].name);
       return contract.approve(target.address, quota, { from: this.account }, function(err, res) {
         if (!err) {
-          console.log('授权成功');
+          console.log('approve success');
           callback(res);
         }
       });
     },
     // operating harvest token
     async harvest(item, index) {
-      console.log(res);
       let res = await common(this.getHarvest, index);
       if (res) {
         item.rewards = 0;
+        this.computeSum();
+        Bus.$emit('changeHarvest');
       }
     },
     async getHarvest(callback, index) {
@@ -459,6 +457,13 @@ export default {
           callback(res);
         }
       });
+    },
+    computeSum() {
+      const sum = this.list.reduce(function(prev, cur) {
+        return new BigNumber(prev).plus(new BigNumber(cur.rewards));
+      }, 0);
+      console.log(sum.toString(), 'sum');
+      Bus.$emit('changeEarn', sum);
     },
     changeModel(type, item) {
       this.modelVisable = true;
@@ -736,7 +741,6 @@ export default {
   font-size: 14px;
   background-color: #00bcd4;
 }
-
 
 .my-skeleton {
   min-width: 120px;
