@@ -10,6 +10,7 @@ class Contract {
       if (Array.isArray(methodParms)) {
         return this.contract.methods[method](...methodParms).call(...args);
       }
+      console.log(methodParms,'222')
       return this.contract.methods[method](methodParms).call(...args);
     }
     return this.contract.methods[method]().call(...args);

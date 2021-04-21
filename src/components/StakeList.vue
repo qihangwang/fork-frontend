@@ -219,15 +219,16 @@ export default {
       }
     },
     async init() {
-      this.skeletonLoading = true;
-      await this.getPools();
-      await this.checkAllowance();
-      await this.getStakeVal();
-      await this.getUnStakeVal();
-      await this.getForkReward();
-      this.update();
-      this.skeletonLoading = false;
-      await this.getApys();
+      return false;
+      // this.skeletonLoading = true;
+      // await this.getPools();
+      // await this.checkAllowance();
+      // await this.getStakeVal();
+      // await this.getUnStakeVal();
+      // await this.getForkReward();
+      // this.update();
+      // this.skeletonLoading = false;
+      // await this.getApys();
     },
     // The timer updates data every 10s
     async update() {

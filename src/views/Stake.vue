@@ -1,7 +1,7 @@
 <template>
   <div class="stake container">
     <div class="card">
-      <p class="title">Your rewards summary</p>
+      <p class="title">Your rewards Fork summary</p>
       <el-row :gutter="20" :type="clientWidth >= 992 ? 'flex' : ''" justify="space-around">
         <el-col :md="12" :sm="24">
           <div class="card-con card-flex">
@@ -107,7 +107,7 @@ export default {
   created() {
     this.getWidth();
     window.addEventListener('resize', this.getWidth);
-    if (this.account) {
+    if (this.account && !this.chainIdError) {
       this.init();
     }
   },
@@ -123,14 +123,15 @@ export default {
       this.clientWidth = document.body.clientWidth;
     },
     async init() {
-      this.totalSkeletonLoading = true;
-      this.skeletonLoading = true;
-      if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
-      }
-      await this.getFork();
-      this.skeletonLoading = false;
+      return false;
+      // this.totalSkeletonLoading = true;
+      // this.skeletonLoading = true;
+      // if (this.timer) {
+      //   clearTimeout(this.timer);
+      //   this.timer = null;
+      // }
+      // await this.getFork();
+      // this.skeletonLoading = false;
     },
     // get earn fork
     async getFork() {
@@ -266,7 +267,6 @@ export default {
   .title {
     font-size: 24px;
     text-align: left;
-    margin-bottom: 10px;
   }
   .card-con {
     .earn-title {

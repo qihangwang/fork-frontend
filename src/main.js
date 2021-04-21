@@ -8,9 +8,10 @@ import 'element-ui/lib/theme-chalk/display.css';
 import vuePlugin from './utils/vuePlugin';
 import './App.less';
 import './directive';
-import { Skeleton } from 'vant';
+import { Skeleton, CountDown } from 'vant';
 
 Vue.use(Skeleton);
+Vue.use(CountDown);
 Vue.use(ElementUI);
 Vue.use(vuePlugin);
 

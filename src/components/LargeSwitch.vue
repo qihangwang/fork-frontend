@@ -1,7 +1,13 @@
 <template>
   <div class="fork-switch" @click="getTarget">
-    <span :class="{ selected: value - 0 == 0 }" :dataValue="0">{{ textArr[0] }}</span>
-    <span :class="{ selected: value - 0 != 0 }" :dataValue="1">{{ textArr[1] }}</span>
+    <span
+      v-for="(item, index) of textArr"
+      :key="index"
+      :class="{ selected: value == index }"
+      :dataValue="index"
+      v-html="textArr[index]"
+    ></span>
+    <!-- <span :class="{ selected: value - 0 != 0 }" :dataValue="1">{{ textArr[1] }}</span> -->
   </div>
 </template>
 
@@ -13,7 +19,7 @@ export default {
     textArr: {
       type: Array,
       default: function() {
-        return ['Live', 'Finished'];
+        return ['   Live   ', 'Finished'];
       },
     },
   },
@@ -31,7 +37,7 @@ export default {
   display: inline-block;
   border-radius: 30px;
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 40px;
   color: @themeColor;
   background-color: #d1e1ec;
   span {
@@ -41,6 +47,7 @@ export default {
     cursor: pointer;
     font-weight: bold;
     border-radius: 16px;
+    white-space: break-spaces;
     &:hover {
       opacity: 0.9;
     }
@@ -51,6 +58,11 @@ export default {
     font-size: 16px;
     background: @themeColor;
     box-shadow: rgba(3, 32, 64, 0.4) 0px -2px 0px 0px inset;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .fork-switch {
+    line-height: 30px;
   }
 }
 </style>

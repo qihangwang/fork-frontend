@@ -8,7 +8,7 @@ Vue.directive('click1', {
 
     el.addEventListener('click', async () => {
       if (store.state.account == '') {
-        alert('请先登录钱包');
+        alert('Please log in to the wallet first');
       } else {
         cb();
       }

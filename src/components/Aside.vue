@@ -11,6 +11,9 @@
       <el-menu-item index="/farm">
         <span slot="title">Farm</span>
       </el-menu-item>
+       <el-menu-item index="/cash">
+        <span slot="title">Cash</span>
+      </el-menu-item>
     </el-menu>
     <el-divider></el-divider>
     <div class="fixed-link">

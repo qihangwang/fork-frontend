@@ -1,37 +1,6 @@
 <template>
   <div class="list">
     <van-skeleton :row="9" class="m-skeleton skeleton" :loading="skeletonLoading">
-      <!-- <el-row v-for="(farm, key, index) in renderList1" :key="index">
-        <template>
-          <div class="project-box">
-            <div class="project">
-              <img class="project-img" :src="farm.project.icon" />
-              <div>
-                <p class="project-name">
-                  {{ farm.project.name }} <span class="project-coin">{{ farm.project.coin }}</span>
-                </p>
-                <div class="project-link">
-                  <a
-                    class="project-link-item"
-                    v-for="(src, key, index) in farm.project.links"
-                    :class="key"
-                    :key="index"
-                    :href="src"
-                    target="_blank"
-                  >
-                    <img :src="icons[key]" />
-                  </a>
-                </div>
-
-                <div class="project-desc">{{ farm.project.desc }}</div>
-              </div>
-            </div>
-            <div class="project-right">
-              <span>Project duration Farms: </span>
-              <span>{{ farm.project.start }} / {{ farm.project.end }}</span>
-            </div>
-          </div>
-        </template> -->
       <el-row :gutter="20" type="flex" class="card-con" v-if="list.length > 0">
         <template v-for="(item, index) of renderList">
           <el-col :key="index" :lg="8" :md="12" :sm="24">
@@ -118,7 +87,7 @@
                       >Approve</el-button
                     >
                     <div v-else class="stake-line">
-                      <span class="bold-num">{{ item.staked>0?Number(item.staked).toFixed(3):0 }}</span>
+                      <span class="bold-num">{{ item.staked > 0 ? Number(item.staked).toFixed(3) : 0 }}</span>
                       <el-button
                         v-if="item.staked == 0"
                         type="primary custom-border"
@@ -171,7 +140,7 @@
           </el-col>
         </template>
         <div v-if="renderList.length == 0" class="no-result">
-          <img src="https://i.loli.net/2021/04/09/alXZG7gvhB18ws6.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/no-result.png" />
           <div>No data temporarily</div>
         </div>
       </el-row>
@@ -192,13 +161,14 @@
 
 <script>
 import BigNumber from 'bignumber.js';
+import contracts from '@/config/contractObj';
 import Contract from '@/utils/contract';
 import { common } from '@/utils/common';
 import { getFarmApy, getPriceBusd } from '@/utils/apy';
-import contracts from '@/config/contractObj';
 import farmConfig from '@/config/farm.js';
 import Model from './Model.vue';
 import Wait from './Wait';
+import Bus from '@/utils/bus.js';
 
 const FarmProject = farmConfig[process.env.VUE_APP_NETWORK_ID];
 
@@ -247,16 +217,6 @@ export default {
         return false;
       });
     },
-    // renderList1() {
-    //   const farms = {};
-    //   this.list.forEach(item => {
-    //     farms[item.projectId] = farms[item.projectId] || {};
-    //     farms[item.projectId].project = FarmProject[item.projectId];
-    //     farms[item.projectId].pools = farms[item.projectId].pools || [];
-    //     farms[item.projectId].pools.push(item);
-    //   });
-    //   return farms;
-    // },
   },
   created() {
     if (this.account && !this.chainIdError) {
@@ -305,7 +265,7 @@ export default {
       this.timer = setTimeout(async () => {
         await this.getForkReward();
         this.update();
-      }, 10000);
+      }, 20000);
     },
     // first get pools
     async getPools() {
@@ -324,7 +284,6 @@ export default {
         // let farms = {};
         for (let index = 0; index < this.poolsLength; index++) {
           // alreay get pool stakeval and total
-
           await contract.call('poolInfo', index, function(err, res) {
             if (!err) {
               const project = FarmProject[res.projectId];
@@ -345,10 +304,6 @@ export default {
                 rewards: 0,
                 index,
               };
-              // farms[res.projectId] = farms[res.projectId] || {};
-              // farms[res.projectId].project = project;
-              // farms[res.projectId].pools = farms[res.projectId].pools || [];
-              // farms[res.projectId].pools.push(obj);
               arr.push(obj);
             }
           });
@@ -414,6 +369,11 @@ export default {
           });
         }
       }
+      const sum = this.list.reduce(function(prev, cur) {
+        return new BigNumber(prev).plus(new BigNumber(cur.rewards));
+      }, 0);
+      console.log(sum.toString(), 'sum');
+      Bus.$emit('changeEarn', sum);
     },
     // four
     async getApys() {
@@ -777,19 +737,6 @@ export default {
   background-color: #00bcd4;
 }
 
-.no-result {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 400px;
-  height: 100%;
-  flex-direction: column;
-  > div {
-    margin-top: 10px;
-  }
-}
 
 .my-skeleton {
   min-width: 120px;

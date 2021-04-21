@@ -41,6 +41,7 @@
         <ul class="nav-menu">
           <li :class="{ active: path.indexOf('stake') > -1 }"><router-link to="/stake">Stake</router-link></li>
           <li :class="{ active: path.indexOf('farm') > -1 }"><router-link to="/farm">Farm</router-link></li>
+          <li :class="{ active: path.indexOf('cash') > -1 }"><router-link to="/cash">Cash</router-link></li>
         </ul>
       </div>
       <div :class="['wallet transition-all', { 'trans-show': !drawerVisable, 'trans-hidden': drawerVisable }]">

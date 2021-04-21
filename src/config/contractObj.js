@@ -2,6 +2,7 @@ import IERC20JSON from '../contract/IERC20.json';
 import WBNBJSON from '../contract/MockWBNB.json';
 import BUSDJSON from '../contract/MockDai.json';
 import ForkTokenJSON from '../contract/ForkToken.json';
+import CheckTokenJSON from '../contract/CheckToken.json';
 import IFairLaunchJSON from '../contract/IFairLaunch.json';
 import ForkFarmJSON from '../contract/ForkFarm.json';
 import UniswapV2FactoryJSON from '../contract/UniswapV2Factory.json';
@@ -40,7 +41,7 @@ export default {
     name: 'Fork',
   },
   CHECK: {
-    abi: IERC20JSON,
+    abi: CheckTokenJSON,
     address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['CHECK'] : '',
     name: 'Check',
   },
