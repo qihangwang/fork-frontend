@@ -1,6 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
-
 import store from '../store/index';
+
 // this returns the provider, or null if it wasn't detected
 async function checkProvider() {
   const provider = await detectEthereumProvider();
@@ -13,7 +13,7 @@ async function checkProvider() {
 
 function startApp(provider) {
   // If the provider returned by detectEthereumProvider is not the same as
-  // window.ethereum, something is overwriting it, perhaps another wallet. 
+  // window.ethereum, something is overwriting it, perhaps another wallet.
   if (provider !== window.ethereum) {
     console.error('Do you have multiple wallets installed?');
   }
@@ -109,6 +109,44 @@ export async function requestPermissions() {
   return false;
 }
 
+export const nodes = {
+  56: ['https://bsc-dataseed1.ninicoin.io'],
+  97: ['https://bsc-dataseed1.ninicoin.io', 'https://bsc-dataseed1.defibit.io', 'https://bsc-dataseed.binance.org'],
+};
+
+const setupNetwork = async () => {
+  const provider = window.ethereum;
+  if (provider) {
+    const chainId = parseInt(process.env.VUE_APP_NETWORK_ID, 10);
+    try {
+      await provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: `0x${chainId.toString(16)}`,
+            chainName: 'Binance Smart Chain Mainnet',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: nodes[process.env.VUE_APP_NETWORK_ID],
+            blockExplorerUrls: ['https://bscscan.com/'],
+          },
+        ],
+      });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  } else {
+    console.error("Can't setup the BSC network on metamask because window.ethereum is undefined");
+    return false;
+  }
+};
+
 export default {
   checkProvider,
+  setupNetwork,
 };

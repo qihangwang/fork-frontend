@@ -14,7 +14,7 @@
               </div>
             </div>
             <div class="card-con-right">
-              <img src="https://i.loli.net/2021/04/02/FgLazD7Z3clnHKM.png" />
+              <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/icon.png" />
             </div>
           </div>
         </el-col>

@@ -1,6 +1,7 @@
 // import Web3 from 'web3';
 const Web3 = require('web3');
 import store from '../store/index';
+import MetaMask from './metamask';
 // import detectEthereumProvider from '@metamask/detect-provider';
 
 async function init() {
@@ -19,6 +20,7 @@ async function init() {
     });
     console.log('installed Metamask');
     store.dispatch('changeLoaded', true);
+
     // startApp(provider); // Initialize your app
   } else {
     store.state.enthume = false;
@@ -26,6 +28,7 @@ async function init() {
     console.log('Please install MetaMask!');
     store.dispatch('changeLoaded', true);
   }
+  MetaMask.setupNetwork();
 }
 
 export default init;

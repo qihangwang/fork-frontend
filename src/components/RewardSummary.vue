@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="card-con-right">
-            <img src="https://i.loli.net/2021/04/02/FgLazD7Z3clnHKM.png" />
+            <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/icon.png" />
           </div>
         </div>
       </el-col>
@@ -40,7 +40,10 @@
                 </van-skeleton>
               </div>
               <div class="info">
-                your locked balance will be available after 1 month: <a class="green">detail here</a>
+                your locked balance will be available after 1 month:
+                <a href="https://docs.fork-finance.org/tokenomics/bonus-reward-period" target="_blank" class="green"
+                  >detail here</a
+                >
               </div>
             </div>
           </div>
@@ -142,7 +145,6 @@ export default {
         let contract = new Contract(current.abi, current.address, current.name);
         let walletMoney = await contract.getBalance(this.account, current.address);
         let lockMoney = await contract.call('lockOf', this.account);
-        console.log(walletMoney, lockMoney, '222222');
         if (walletMoney) {
           this.walletMoney = Number(web3js.utils.fromWei(walletMoney, 'ether')).toFixed(2);
         }

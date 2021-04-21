@@ -5,13 +5,10 @@
 <template>
   <div class="fixed-menu">
     <el-menu :default-active="path1" class="el-menu-vertical-demo" router>
-      <el-menu-item index="/stake">
-        <span slot="title">Stake</span>
-      </el-menu-item>
       <el-menu-item index="/farm">
         <span slot="title">Farm</span>
       </el-menu-item>
-       <el-menu-item index="/cash">
+      <el-menu-item index="/cash">
         <span slot="title">Cash</span>
       </el-menu-item>
     </el-menu>
@@ -19,31 +16,31 @@
     <div class="fixed-link">
       <el-col :span="24" class="item">
         <a href="https://twitter.com/ForkFinance">
-          <img src="https://i.loli.net/2021/04/09/Bm3l7vC4yWGxawd.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/twitter.png" />
           <span>Twitter</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
         <a href="https://t.me/forkfinance">
-          <img src="https://i.loli.net/2021/04/09/bpNCDcI6SWXuwZ3.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Telegram.png" />
           <span>Telegram</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
         <a href="https://fork-finance.medium.com/">
-          <img src="https://i.loli.net/2021/04/09/lJAcrTzSuPVyRft.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/medium.png" />
           <span>Medium</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
         <a href="https://docs.fork-finance.org/">
-          <img src="https://i.loli.net/2021/04/09/1ORhmZtpngLfUlC.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/docs.png" />
           <span>Docs</span>
         </a>
       </el-col>
-       <el-col :span="24" class="item">
+      <el-col :span="24" class="item">
         <a href="https://t.me/forkfinance_announcement">
-          <img src="https://i.loli.net/2021/04/09/G63zadNgE45LXuk.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/mes.png" />
           <span>Announcement</span>
         </a>
       </el-col>

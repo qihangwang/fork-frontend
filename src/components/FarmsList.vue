@@ -54,16 +54,20 @@
                 <div class="model-pan">
                   <div class="solo-title">
                     <span>CHECK</span>
-                    <span>Earned</span>
+                    <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                      <span>Earned</span>
+                    </van-skeleton>
                   </div>
                   <div class="base-flex base-flex-item-lits">
-                    <div class="base-flex-content bold-num">
-                      {{ item.rewards > 0 ? Number(item.rewards).toFixed(3) : 0 }}
-                    </div>
+                    <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                      <div class="base-flex-content bold-num">
+                        {{ item.rewards > 0 ? Number(item.rewards).toFixed(3) : 0 }}
+                      </div>
+                    </van-skeleton>
                     <div class="flex-item-end base-flex-number">
                       <el-button
                         type="info"
-                        :disabled="item.rewards == 0"
+                        :disabled="!account || item.rewards == 0"
                         plain
                         :class="['gray-butn']"
                         v-if="item.status == 0"
@@ -71,8 +75,8 @@
                       >
                       <el-button
                         v-else
-                        :disabled="item.rewards == 0"
-                        @click="harvest(item, index)"
+                        :disabled="!account || item.rewards == 0"
+                        @click="harvest(item, item.index)"
                         type="primary custom-border"
                         >Harvest</el-button
                       >
@@ -83,9 +87,12 @@
                     <span>Staked</span>
                   </div>
                   <template>
-                    <el-button v-if="item.status == 0" type="primary" class="wallet" round @click="approve(item)"
-                      >Approve</el-button
-                    >
+                    <el-button class="wallet" v-if="!account" type="primary" round @click="walletVisable = true">
+                      Unlock Wallet
+                    </el-button>
+                    <el-button v-else-if="item.status == 0" type="primary" class="wallet" round @click="approve(item)">
+                      Approve
+                    </el-button>
                     <div v-else class="stake-line">
                       <span class="bold-num">{{ item.staked > 0 ? Number(item.staked).toFixed(3) : 0 }}</span>
                       <el-button
@@ -157,6 +164,7 @@
       :onClose="closeModel"
       ref="model"
     />
+    <Wallet :visable="walletVisable" :close="closeWallet" />
   </div>
 </template>
 
@@ -170,6 +178,7 @@ import farmConfig from '@/config/farm.js';
 import Model from './Model.vue';
 import Wait from './Wait';
 import Bus from '@/utils/bus.js';
+import Wallet from '@/components/Wallet.vue';
 
 const FarmProject = farmConfig[process.env.VUE_APP_NETWORK_ID];
 
@@ -181,6 +190,7 @@ export default {
   components: {
     Model,
     Wait,
+    Wallet,
   },
   data() {
     return {
@@ -191,16 +201,17 @@ export default {
       farms: {},
       list: [],
       icons: {
-        twitter: 'https://i.loli.net/2021/04/09/Bm3l7vC4yWGxawd.png',
-        medium: 'https://i.loli.net/2021/04/09/bpNCDcI6SWXuwZ3.png',
-        telegram: 'https://i.loli.net/2021/04/09/lJAcrTzSuPVyRft.png',
-        github: 'https://i.loli.net/2021/04/10/xAlrf4k29SFNDPI.png',
-        website: 'https://i.loli.net/2021/04/10/YHRfnwAIDg24FNE.png',
+        twitter: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/twitter.png',
+        medium: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/medium.png',
+        telegram: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Telegram.png',
+        github: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Logo GitHub.png',
+        website: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/website.png',
       },
       modelType: '',
       modelVisable: false,
       activeItem: {},
       timer: null,
+      walletVisable: false,
     };
   },
   computed: {
@@ -220,7 +231,7 @@ export default {
     },
   },
   created() {
-    if (this.account && !this.chainIdError) {
+    if (!this.chainIdError) {
       this.init();
     }
   },
@@ -232,19 +243,14 @@ export default {
   },
   watch: {
     account(v) {
-      this.skeletonLoading = true;
-      if (v) {
-        if (!this.chainIdError) {
-          this.init();
-        }
+      if (!this.chainIdError && v) {
+        this.AccountFn();
       }
     },
     chainIdError(status) {
       this.timer && clearTimeout(this.timer);
       if (!status) {
-        if (this.account) {
-          this.init();
-        }
+        this.init();
       } else {
         this.skeletonLoading = true;
       }
@@ -254,17 +260,26 @@ export default {
     async init() {
       this.skeletonLoading = true;
       await this.getPools();
-      await this.checkAllowance();
-      await this.getStakedVal();
-      await this.getForkReward();
-      this.update();
+      await this.AccountFn();
       this.skeletonLoading = false;
       await this.getApys();
     },
-    // The timer updates data every 10s
+    async AccountFn() {
+      if (this.account) {
+        await this.checkAllowance();
+        await this.getStakedVal();
+        await this.getForkReward();
+        this.update();
+      }
+    },
+    // The timer updates data every 20s
     async update() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
       this.timer = setTimeout(async () => {
         await this.getForkReward();
+        console.log('更新值');
         this.update();
       }, 20000);
     },
@@ -277,6 +292,7 @@ export default {
         await contract.call('poolLength', false, function(err, res) {
           if (!err) {
             that.poolsLength = res;
+            console.log(res, '222');
           }
         });
         const multiple = process.env.VUE_APP_NETWORK_ID == '97' ? 8 : await contract.call('BONUS_MULTIPLIER'); //multiple
@@ -474,6 +490,9 @@ export default {
       this.modelVisable = false;
       this.activeItem = {};
       this.modelType = '';
+    },
+    closeWallet() {
+      this.walletVisable = false;
     },
   },
 };

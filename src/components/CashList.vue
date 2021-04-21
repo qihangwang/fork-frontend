@@ -1,14 +1,13 @@
 <template>
   <div>
-    <van-skeleton :row="10" class="m-skeleton skeleton" :loading="skeletonLoading">
-      <div v-if="type == 0">
+    <van-skeleton :row="11" class="m-skeleton skeleton" :loading="skeletonLoading">
+      <div v-if="Object.keys(renderProject).length > 0">
         <div>
-          <div class="project">
+          <div class="project" v-for="(project, index) in renderProject" :key="index">
             <div class="top">
               <div class="top-info">
-                <!-- <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/bcakground_web_4.png" /> -->
-                <img src="https://fork-finance.org/ico_lg_1_64@2x.png" />
-                <span>FORK</span>
+                <img :src="project.icon" v-if="project.icon" />
+                <span>{{ project.name }}</span>
               </div>
               <button class="top-btn" @click="show = !show"><i :class="show ? 'up' : 'down'"></i></button>
             </div>
@@ -16,18 +15,19 @@
             <collapse-transition>
               <div class="content" v-show="show">
                 <el-row type="flex" class="flex-wrap">
-                  <el-col class="item" :sm="24" :md="12" v-for="(item, index) of cashPools" :key="index">
-                    <el-card shadow="hover">
-                      <div :class="['type', `type-${index}`]">
+                  <el-col class="item" :sm="24" :md="12" v-for="(item, index) of project.realPools" :key="index">
+                    <el-card shadow="never">
+                      <div class="type">
                         <div class="step">
-                          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/step1.png" />
-                          <span>First</span>
+                          <!-- <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/step1.png" /> -->
+                          <span>{{ item.subTitle }}</span>
                         </div>
                         <div class="times">
-                          <span>status:</span>
-                          <template>
-                            <span class="waiting">{{ times[item.timeStatus] }}</span>
-                          </template>
+                          <el-tag
+                            size="small"
+                            :type="item.timeStatus == 2 ? 'success' : item.timeStatus == 1 ? 'warning' : ''"
+                            >{{ times[item.timeStatus] }}</el-tag
+                          >
                         </div>
                       </div>
                       <div class="card-wrap">
@@ -62,10 +62,18 @@
                             <span>CHECK to burn:</span><span>{{ item.stakeTotal }}</span>
                           </li>
                           <li>
-                            <span>CHECK you deposited:</span><span>{{ item.staked }}</span>
+                            <span>CHECK you deposited:</span>
+                            <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                              <span>{{ item.staked }}</span>
+                            </van-skeleton>
                           </li>
                           <li>
-                            <span>FORK you'l receive:</span><span>{{ item.realTimeClaim || item.claim }}</span>
+                            <span>FORK you'l receive:</span>
+                            <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                              <span v-if="item.timeStatus == 0">0</span>
+                              <span v-else-if="item.timeStatus == 1">{{ item.claim }}</span>
+                              <span v-else>{{ item.realTimeClaim }}</span>
+                            </van-skeleton>
                           </li>
                         </ul>
                         <template>
@@ -75,7 +83,8 @@
                           <el-button
                             class="btn"
                             v-else-if="item.timeStatus == 2"
-                            :disabled="item.realTimeClaim > 0"
+                            :disabled="item.realTimeClaim <= 0"
+                            @click="exchangeFork(item, item.index)"
                             type="primary"
                             round
                             >Cash</el-button
@@ -100,8 +109,8 @@
                   </el-col>
                 </el-row>
                 <div class="close">
-                <span @click="show = false">Close<i class="up"></i></span>
-              </div>
+                  <span @click="show = false">Close<i class="up"></i></span>
+                </div>
               </div>
             </collapse-transition>
           </div>
@@ -117,22 +126,26 @@
           :onClose="closeModel"
           ref="model"
         />
-        <Wallet :visable="walletVisable" :close="closeWallet" />
       </div>
-      <div v-if="type == 1" class="no-result">
+      <div v-else class="no-result">
         <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/no-result.png" />
         <div>No data temporarily</div>
       </div>
     </van-skeleton>
+    <Wallet :visable="walletVisable" :close="closeWallet" />
   </div>
 </template>
 <script>
+import Bus from '@/utils/bus.js';
 import CollapseTransition from './collapse-transition';
 import contracts from '@/config/contractObj';
 import Contract from '@/utils/contract';
 import Model from './Model.vue';
 import Wallet from '@/components/Wallet.vue';
 import { common } from '@/utils/common';
+import CashConfig from '@/config/cash.js';
+
+const CashProject = CashConfig.Project[process.env.VUE_APP_NETWORK_ID];
 
 export default {
   name: 'CashItem',
@@ -165,19 +178,35 @@ export default {
       return this.$store.state.account;
     },
     renderProject() {
-      return this.project.filter(() => {
-        if (this.type == 0) {
-          return true;
+      let pro = CashProject;
+      let obj = {};
+      for (let key in pro) {
+        let current = pro[key];
+        current.pools = [];
+        this.cashPools.forEach(item => {
+          if (item.projectId == key) {
+            current.pools.push(item);
+          }
+        });
+        if (current.pools && current.pools.length > 0) {
+          let pools;
+          if (this.type == 0) {
+            pools = current.pools.filter(item => item.timeStatus != 2);
+          } else {
+            pools = current.pools.filter(item => item.timeStatus == 2);
+          }
+          if (pools.length > 0) {
+            pro[key].realPools = pools;
+            obj[key] = pro[key];
+          }
         }
-        if (this.type == 1) {
-          return true;
-        }
-        return false;
-      });
+      }
+      return obj;
     },
   },
   watch: {
     chainIdError(status) {
+      this.timer && clearTimeout(this.timer);
       if (!status) {
         this.init();
       } else {
@@ -195,6 +224,18 @@ export default {
       this.init();
     }
   },
+  mounted() {
+    Bus.$on('saveCheck', () => {
+      console.log('重新计算');
+      this.calculationFork();
+    });
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  },
   methods: {
     async init() {
       this.skeletonLoading = true;
@@ -205,9 +246,21 @@ export default {
     async AccountFn() {
       if (this.account) {
         await this.checkAllowance();
-        await this.quertCheck();
+        await this.queryCheck();
         await this.calculationFork();
+        this.update();
       }
+    },
+    // Real-time calculation of how many forks can be exchanged
+    async update() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      this.timer = setTimeout(async () => {
+        console.log('更新值');
+        await this.calculationRealFork();
+        this.update();
+      }, 20000);
     },
     // 1.first getpools, dont need accounts
     async getPools() {
@@ -221,22 +274,24 @@ export default {
       //     }
       //   });
       const arr = [];
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         await contract.call('cashPoolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
-              status: 0,
+              status: 0, //授权 0 未授权 1授权
               cashToken: res.cashToken,
               stakeToken: that.contracts.CHECK.address,
-              cashTotal: web3js.utils.fromWei(res.cashTotal, 'ether'),
-              stakeTotal: res.stakeTotal,
+              cashTotal: web3js.utils.fromWei(res.cashTotal, 'ether'), // 总奖赏
+              stakeTotal: web3js.utils.fromWei(res.stakeTotal, 'ether'), //存的总的多少check
               projectId: res.projectId,
               startTime: res.startTime * 1000,
               endTime: res.endTime * 1000,
               currentTime: new Date().getTime(),
-              staked: 0,
-              realTimeClaim: 0,
-              claim: 0,
+              staked: 0, //用户存入了多少check
+              realTimeClaim: 0, //用户最终能换到多少fork
+              claim: 0, //用户实时计算能换到多少fork
+              subTitle: CashConfig.SubTitle[i],
+              index: i,
             };
             if (obj.startTime > obj.currentTime) {
               obj.time = obj.startTime - obj.currentTime;
@@ -253,7 +308,6 @@ export default {
         });
       }
       this.cashPools = arr;
-      console.log(arr, 'arr');
     },
     // 2. second get allowance
     async checkAllowance() {
@@ -268,7 +322,6 @@ export default {
         const res = await contract.allowance(this.account, pools.address, function(err, result) {
           if (!err) {
             const approveVal = Number(web3js.utils.fromWei(result, 'ether'));
-            console.log(approveVal, 'approval');
             return approveVal;
           } else {
             return 0;
@@ -282,7 +335,7 @@ export default {
       }
     },
     //3. Query how many CHECKS are saved
-    async quertCheck() {
+    async queryCheck() {
       const that = this;
       const pool = this.contracts.ForkFarm;
       const contract = new Contract(pool.abi, pool.address, pool.name);
@@ -292,6 +345,8 @@ export default {
             if (!err) {
               const item = that.cashPools[i];
               item.staked = web3js.utils.fromWei(res, 'ether');
+            } else {
+              console.log(err);
             }
           });
         }
@@ -305,16 +360,30 @@ export default {
       for (let i = 0; i < this.cashPools.length; i++) {
         if (this.cashPools[i].status != 0 && this.cashPools[i].staked != 0) {
           const item = that.cashPools[i];
-          await contract.call('pendingClaim', [this.account, i], { from: this.account }, (err, res) => {
+          await contract.call('pendingClaim', [this.account, i], { from: this.account }, function(err, res) {
             if (!err) {
               item.realTimeClaim = web3js.utils.fromWei(res, 'ether');
             }
           });
-          if (item.realTimeClaim == 0) {
-            await contract.call('myClaim', [this.account, i], { from: this.account }, (err, res) => {
+          console.log('Calculation receiveFork');
+        }
+      }
+      await this.calculationRealFork();
+    },
+    //. polling  Fn
+    async calculationRealFork() {
+      const that = this;
+      const pool = this.contracts.ForkFarm;
+      const contract = new Contract(pool.abi, pool.address, pool.name);
+      for (let i = 0; i < this.cashPools.length; i++) {
+        if (this.cashPools[i].status != 0 && this.cashPools[i].staked != 0) {
+          const item = that.cashPools[i];
+          if (item.realTimeClaim == 0 && item.timeStatus == 1) {
+            await contract.call('mayClaim', [this.account, i], { from: this.account }, function(err, res) {
               const item = that.cashPools[i];
               if (!err) {
                 item.claim = web3js.utils.fromWei(res, 'ether');
+                console.log(web3js.utils.fromWei(res, 'ether'), '222xs');
               }
             });
           }
@@ -336,6 +405,24 @@ export default {
       return contract.approve(target.address, quota, { from: this.account }, function(err, res) {
         if (!err) {
           console.log('approve success');
+          callback(res);
+        }
+      });
+    },
+    //finally
+    async exchangeFork(item, index) {
+      let res = await common(this.getFork, index);
+      if (res) {
+        item.realTimeClaim = 0;
+        item.claim = 0;
+      }
+    },
+    async getFork(callback, index) {
+      const current = this.contracts.ForkFarm;
+      const contract = new Contract(current.abi, current.address);
+      return contract.send('cashCheck', index, { from: this.account }, function(err, res) {
+        if (!err) {
+          console.log('get fork suncess', res);
           callback(res);
         }
       });
@@ -376,10 +463,11 @@ export default {
 }
 .project {
   overflow: hidden;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 20%);
-  background: #f3fbff;
+  //   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 20%);
+  background: #ffffff;
   margin-top: 30px;
   border-radius: 16px;
+  border: 1px solid #ddd;
 }
 .top {
   display: flex;
@@ -443,7 +531,7 @@ i {
 }
 .content {
   padding-top: 30px;
-//   padding-bottom: 20px;
+  //   padding-bottom: 20px;
 }
 .item {
   padding: 0 16px;
@@ -458,12 +546,8 @@ i {
     font-weight: bold;
     display: flex;
     justify-content: space-between;
-  }
-  .type-0 {
-    background: linear-gradient(rgb(167, 232, 241) 0%, rgb(148, 225, 242) 100%);
-  }
-  .type-1 {
-    background: linear-gradient(rgb(226, 201, 251) 0%, rgb(205, 184, 250) 100%);
+    background-color: #f5f7fa;
+    border-bottom: 1px solid #e4e7ed;
   }
   .status-wrap {
     display: flex;
@@ -476,12 +560,14 @@ i {
     height: 100%;
     border-radius: 16px;
     overflow: hidden;
+    filter: drop-shadow(2px 2px 3px #999);
     background: radial-gradient(circle at 0 calc(100% - 90px), transparent 15px, #fff 6px) top left,
       linear-gradient(0.25turn, #fff, #fff),
       radial-gradient(circle at 20px calc(100% - 90px), transparent 15px, #fff 16px) bottom right;
-    background-size: 20px 100%, calc(100% - 40px) 100%, 20px 100%;
+    background-size: 20px 100%, calc(100% - 36px) 100%, 20px 100%;
     background-repeat: no-repeat;
     background-position: 0 0px, 20px 0px, calc(100% - 0px) 0px;
+    border: none;
   }
   /deep/.el-card__body {
     padding: 0;
@@ -514,25 +600,9 @@ i {
     }
   }
 }
-.status {
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-size: 12px;
-  transform: scale(0.9);
-}
-.finshed {
-  color: #fff;
-  background: #607d8b;
-  .status;
-}
-.start {
-  background: #03a9f4;
-  color: #fff;
-  .status;
-}
 .close {
   background: #fff;
-  border-top: 1px solid rgb(233, 234, 235);
+  box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.2);
   color: #000;
   height: 60px;
   line-height: 60px;
@@ -554,26 +624,20 @@ i {
   margin: 60px 0 0px;
   box-shadow: rgba(14, 14, 44, 0.4) 0px -1px 0px 0px inset;
   font-size: 16px;
-  height: 48px;
   padding: 0px 24px;
-  background-color: rgb(31, 199, 212);
   color: white;
   width: 100%;
   letter-spacing: 0.03em;
   border-radius: 16px;
-  border-color: #1fc7d4;
+  height: 48px;
+  box-shadow: rgba(14, 14, 44, 0.4) 0px -1px 0px 0px inset;
 }
+
 .times {
   color: #fff;
   font-weight: normal;
   font-size: 14px;
   line-height: 30px;
-}
-.waiting {
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  margin-left: 6px;
 }
 /deep/.van-count-down {
   margin: 20px auto;

@@ -3,19 +3,24 @@
 // const networkId = process.env.VUE_APP_NETWORK_ID;
 
 /* project info */
-const CashProject = {
+const Project = {
   '97': {
     '0': {
       name: 'Fork Finance',
-      icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/coin.png',
+      // icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/coin.png',
     },
   },
   '56': {
     '0': {
       name: 'Fork Finance',
-      icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/coin.png',
+      // icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/coin.png',
     },
   },
 };
 
-export default CashProject;
+const SubTitle = ['FORK 1st Cash event', 'FORK 2nd Cash event', 'FORK 3th Cash event'];
+
+export default {
+  Project: Project,
+  SubTitle: SubTitle,
+};

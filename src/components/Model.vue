@@ -11,7 +11,7 @@
       <span slot="title">
         <h3 class="title">{{ type }} Tokens</h3>
       </span>
-      <van-skeleton :row="1" class="m-skeleton one-line-skeleton" :loading="account == '' || skeletonLoading">
+      <van-skeleton :row="2" class="m-skeleton one-line-skeleton" :loading="account == '' || skeletonLoading">
         <div class="flex">
           <p class="over">{{ type }} Name : {{ name }}</p>
           <p class="over">Balance : {{ maxVal == 0 ? 0 : Number(maxVal).toFixed(3) }}</p>
@@ -35,6 +35,7 @@
   </el-dialog>
 </template>
 <script>
+import Bus from '@/utils/bus.js';
 import Contract from '@/utils/contract';
 import contracts from '@/config/contractObj';
 import { common } from '@/utils/common';
@@ -148,6 +149,11 @@ export default {
         this.maxVal = new BigNumber(this.maxVal).minus(new BigNumber(this.val));
         this.data.staked =
           this.type == 'Stake' ? new BigNumber(this.data.staked).plus(new BigNumber(this.val)) : this.maxVal;
+        // check save
+        if (this.name == 'CHECK' && this.type == 'Stake') {
+          this.data.stakeTotal = new BigNumber(this.data.stakeTotal).plus(new BigNumber(this.val));
+          Bus.$emit('saveCheck');
+        }
         this.val = '';
       }
       this.sendLoading = false;

@@ -8,7 +8,7 @@
     <div class="header pc-header hidden-xs-only">
       <div class="header-left">
         <a href="/">
-          <img src="https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png" />
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/header.png" />
           <span>Fork Finance</span>
         </a>
       </div>
@@ -27,8 +27,8 @@
     <div class="header-mobile hidden-sm-and-up">
       <div class="row">
         <div class="header-title">
-          <img src="https://i.loli.net/2021/04/01/WEcd5aKH2fT1whR.png" />
-          <router-link to="/stake">FORK<br />COIN</router-link>
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/header.png" />
+          <router-link to="/farm">FORK<br />COIN</router-link>
         </div>
         <div class="header-menu-btn">
           <el-button circle @click="drawerVisable = !drawerVisable">
@@ -39,7 +39,6 @@
       </div>
       <div :class="['nav transition-all', { 'trans-show': drawerVisable, 'trans-hidden': !drawerVisable }]">
         <ul class="nav-menu">
-          <li :class="{ active: path.indexOf('stake') > -1 }"><router-link to="/stake">Stake</router-link></li>
           <li :class="{ active: path.indexOf('farm') > -1 }"><router-link to="/farm">Farm</router-link></li>
           <li :class="{ active: path.indexOf('cash') > -1 }"><router-link to="/cash">Cash</router-link></li>
         </ul>

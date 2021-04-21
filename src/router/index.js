@@ -6,11 +6,6 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/stake',
-    name: 'Stake',
-    component: () => import('../views/Stake.vue'),
-  },
-  {
     path: '/farm',
     name: 'Farm',
     component: () => import('../views/Farm.vue'),
@@ -22,7 +17,7 @@ const routes = [
   },
   {
     path: '*',
-    redirect: { name: 'Stake' },
+    redirect: { name: 'Farm' },
   },
 ];
 
