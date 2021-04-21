@@ -16,6 +16,11 @@ const routes = [
     component: () => import('../views/Cash.vue'),
   },
   {
+    path: '/countdown',
+    name: 'Countdown',
+    component: () => import('../views/CountDown.vue'),
+  },
+  {
     path: '*',
     redirect: { name: 'Farm' },
   },

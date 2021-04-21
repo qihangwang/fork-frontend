@@ -2,10 +2,10 @@
   <div id="app" :class="['white', { others: path !== '' }]">
     <el-container>
       <el-header>
-        <Header />
+        <Header v-if="path != 'countdown'" />
       </el-header>
-      <el-container v-show="accountLoad">
-        <el-aside width="180px" class="hidden-xs-only">
+      <el-container v-show="path == '/countdown' || accountLoad">
+        <el-aside width="180px" class="hidden-xs-only" v-if="path != '/countdown'">
           <Aside :path="path" />
         </el-aside>
         <el-main class="route-content">
@@ -30,7 +30,7 @@ export default {
     path() {
       return this.$store.state.toPage;
     },
-     accountLoad() {
+    accountLoad() {
       return this.$store.state.accountLoad;
     },
   },

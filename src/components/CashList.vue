@@ -63,13 +63,23 @@
                           </li>
                           <li>
                             <span>CHECK you deposited:</span>
-                            <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                            <van-skeleton
+                              class="m-skeleton"
+                              :row="1"
+                              :loading="!account && !accountLoad"
+                              row-width="40"
+                            >
                               <span>{{ item.staked }}</span>
                             </van-skeleton>
                           </li>
                           <li>
                             <span>FORK you'l receive:</span>
-                            <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                            <van-skeleton
+                              class="m-skeleton"
+                              :row="1"
+                              :loading="!account && !accountLoad"
+                              row-width="40"
+                            >
                               <span v-if="item.timeStatus == 0">0</span>
                               <span v-else-if="item.timeStatus == 1">{{ item.claim }}</span>
                               <span v-else>{{ item.realTimeClaim }}</span>
@@ -161,6 +171,7 @@ export default {
     return {
       show: true,
       skeletonLoading: true,
+      accountLoad: false,
       contracts,
       poolsLength: 0,
       projects: [],
@@ -217,6 +228,9 @@ export default {
       if (!this.chainIdError && v) {
         this.AccountFn();
       }
+      if (!v) {
+        this.accountLoad = false;
+      }
     },
   },
   created() {
@@ -267,14 +281,14 @@ export default {
       const that = this;
       const current = this.contracts.ForkFarm;
       const contract = new Contract(current.abi, current.address, current.name);
-      //   await contract.call('poolLength', false, function(err, res) {
-      //     if (!err) {
-      //       that.poolsLength = res;
-      //       console.log(res, 'res');
-      //     }
-      //   });
+      await contract.call('cashPoolLength', false, function(err, res) {
+        if (!err) {
+          that.poolsLength = res;
+          console.log(res)
+        }
+      });
       const arr = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < this.poolsLength; i++) {
         await contract.call('cashPoolInfo', i, function(err, res) {
           if (!err) {
             const obj = {
@@ -304,6 +318,7 @@ export default {
               obj.timeStatus = 2; //finshed
             }
             arr.push(obj);
+            console.log(1)
           }
         });
       }
@@ -369,6 +384,7 @@ export default {
         }
       }
       await this.calculationRealFork();
+      this.accountLoad = true;
     },
     //. polling  Fn
     async calculationRealFork() {
@@ -566,7 +582,7 @@ i {
       radial-gradient(circle at 20px calc(100% - 90px), transparent 15px, #fff 16px) bottom right;
     background-size: 20px 100%, calc(100% - 36px) 100%, 20px 100%;
     background-repeat: no-repeat;
-    background-position: 0 0px, 20px 0px, calc(100% - 0px) 0px;
+    background-position: 0 0px, 18px 0px, calc(100% - 0px) 0px;
     border: none;
   }
   /deep/.el-card__body {
