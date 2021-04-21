@@ -331,12 +331,13 @@ export default {
       for (let i = 0; i < this.cashPools.length; i++) {
         const contract = new Contract(
           this.contracts['ERC20'].abi,
-          this.cashPools[i].cashToken,
+          this.contracts['CHECK'].address,
           this.contracts['ERC20'].name,
         );
         const res = await contract.allowance(this.account, pools.address, function(err, result) {
           if (!err) {
             const approveVal = Number(web3js.utils.fromWei(result, 'ether'));
+            console.log(approveVal)
             return approveVal;
           } else {
             return 0;
@@ -359,7 +360,7 @@ export default {
           await contract.call('cashUserInfo', [i, this.account], { from: this.account }, function(err, res) {
             if (!err) {
               const item = that.cashPools[i];
-              item.staked = web3js.utils.fromWei(res, 'ether');
+              item.staked = web3js.utils.fromWei(res.amount, 'ether');
             } else {
               console.log(err);
             }
@@ -375,7 +376,7 @@ export default {
       for (let i = 0; i < this.cashPools.length; i++) {
         if (this.cashPools[i].status != 0 && this.cashPools[i].staked != 0) {
           const item = that.cashPools[i];
-          await contract.call('pendingClaim', [this.account, i], { from: this.account }, function(err, res) {
+          await contract.call('pendingClaim', [i, this.account], { from: this.account }, function(err, res) {
             if (!err) {
               item.realTimeClaim = web3js.utils.fromWei(res, 'ether');
             }
@@ -395,7 +396,7 @@ export default {
         if (this.cashPools[i].status != 0 && this.cashPools[i].staked != 0) {
           const item = that.cashPools[i];
           if (item.realTimeClaim == 0 && item.timeStatus == 1) {
-            await contract.call('mayClaim', [this.account, i], { from: this.account }, function(err, res) {
+            await contract.call('mayClaim', [i, this.account], { from: this.account }, function(err, res) {
               const item = that.cashPools[i];
               if (!err) {
                 item.claim = web3js.utils.fromWei(res, 'ether');
@@ -408,7 +409,7 @@ export default {
     },
     // approve
     async approve(item) {
-      let res = await common(this.approveFn, item.cashToken);
+      let res = await common(this.approveFn, this.contracts['CHECK'].address);
       if (res) {
         item.status = 1;
       }
