@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="card top">
-      <h2 class="top-title">IFO: Initial Farm Offerings</h2>
+      <h2 class="top-title">IDFO: Initial Dex Farm Offerings</h2>
       <p class="top-desc">Buy new tokens with a brand new token sale model.</p>
     </div>
     <div class="card con">
