@@ -54,12 +54,12 @@
         </van-count-down>
         <p class="text-box">OUR WEBSITE IS COMING SOON</p>
         <el-button v-if="finshed && loaded" @click="linkTo" type="success" icon="el-icon-right" circle></el-button>
-        <div class="footer" v-shiw="loaded">
+        <div class="footer" v-show="loaded">
           <p>© 2021 — Made with <span class="love"> ♥︎ </span> by <a href="#">Finance</a></p>
         </div>
       </div>
     </div>
-    <div class="over-lay" />
+    <div class="over-lay" v-loading="!loaded" />
   </div>
 </template>
 <script>
@@ -80,9 +80,17 @@ export default {
   },
   async created() {
     await this.getCurrentTime();
-    this.loaded = true;
+    this.loadImage();
   },
   methods: {
+    loadImage() {
+      const url = 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Desert.jpg';
+      const image = new Image();
+      image.src = url;
+      image.onload = () => {
+        this.loaded = true;
+      };
+    },
     async getCurrentTime() {
       let time = await web3js.eth.getBlock('latest');
       const end = new Date('2021-04-24T12:00:00.000+0000').getTime();
