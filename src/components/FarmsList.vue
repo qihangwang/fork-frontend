@@ -292,7 +292,6 @@ export default {
         await contract.call('poolLength', false, function(err, res) {
           if (!err) {
             that.poolsLength = res;
-            console.log(res, '222');
           }
         });
         const multiple = process.env.VUE_APP_NETWORK_ID == '97' ? 8 : await contract.call('BONUS_MULTIPLIER'); //multiple
@@ -391,7 +390,7 @@ export default {
     // four
     async getApys() {
       for (let i = 0; i < this.list.length; i++) {
-        if (this.list[i].allocPoint == 0) {
+        if (this.list[i].allocPoint == 0 || this.list[i].quoteToken.name == 'ALPACA') {
           return false;
         }
         // 1. comput poolWeight
@@ -413,26 +412,32 @@ export default {
         const quoteTokenBalanceLP = await quotaContract.call('balanceOf', this.list[i].stakeToken);
 
         // 2 comput lpTotalInQuoteToken
-        if (totalSupply) {
-          const lpTotalSupply = web3js.utils.fromWei(totalSupply, 'ether');
-          // lp
-          const lpTokenRatio = new BigNumber(this.list[i].lpSupply).div(new BigNumber(lpTotalSupply));
-          const lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
-            .div(new BigNumber(10).pow(18))
-            .times(new BigNumber(2))
-            .times(lpTokenRatio);
-          this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name);
-          this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
-          let totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
-            new BigNumber(this.list[i].lpTotalInQuoteToken),
-          );
-          // Single currency pledge
-          if (this.list[i].token == undefined) {
-            totalUsdt = new BigNumber(this.list[i].lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
+        try {
+          if (totalSupply) {
+            const lpTotalSupply = web3js.utils.fromWei(totalSupply, 'ether');
+            // lp
+            const lpTokenRatio = new BigNumber(this.list[i].lpSupply).div(new BigNumber(lpTotalSupply));
+            const lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
+              .div(new BigNumber(10).pow(18))
+              .times(new BigNumber(2))
+              .times(lpTokenRatio);
+
+            this.list[i].quoteTokenPrice = await getPriceBusd(this.list[i].quoteToken.name); //stake busd price
+
+            this.list[i].lpTotalInQuoteToken = lpTotalInQuoteToken;
+            let totalUsdt = new BigNumber(this.list[i].quoteTokenPrice).times(
+              new BigNumber(this.list[i].lpTotalInQuoteToken),
+            );
+            // Single currency pledge
+            if (this.list[i].token == undefined) {
+              totalUsdt = new BigNumber(this.list[i].lpSupply).times(new BigNumber(this.list[i].quoteTokenPrice));
+            }
+            const apy = await getFarmApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
+            this.list[i].apy = apy ? apy.toFixed(2) : 0;
+            this.list[i].totalUsdt = totalUsdt.toFixed(4);
           }
-          const apy = await getFarmApy(this.list[i].poolWeight, totalUsdt, this.list[i].multiple);
-          this.list[i].apy = apy ? apy.toFixed(2) : 0;
-          this.list[i].totalUsdt = totalUsdt.toFixed(4);
+        } catch (err) {
+          console.log(err);
         }
       }
     },

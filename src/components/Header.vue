@@ -15,7 +15,7 @@
       <div class="header-right">
         <template>
           <el-button v-show="accountLoad && !NetErrorBtn" type="primary" size="medium" @click="() => (visable = true)">
-            {{ !netError && account ? account : 'Connect to a wallet' }}</el-button
+            {{ !chainIdError && account ? account : 'Connect to a wallet' }}</el-button
           >
           <el-button v-show="accountLoad && NetErrorBtn" icon="el-icon-link" type="danger" size="medium"
             >Wrong Network</el-button
@@ -52,7 +52,7 @@
           class="margin-t"
           @click="() => connect()"
         >
-          {{ !netError && account ? account : 'Connect to a wallet' }}
+          {{ !chainIdError && account ? account : 'Connect to a wallet' }}
         </el-button>
         <el-button v-show="accountLoad && NetErrorBtn" class="margin-t" icon="el-icon-link" type="danger" size="medium"
           >Wrong Network</el-button
@@ -64,7 +64,8 @@
   </div>
 </template>
 <script>
-import initWeb3 from '@/utils/web3';
+// import initWeb3 from '@/utils/web3';
+import MetaMask from '@/utils/metamask';
 import Wallet from '@/components/Wallet.vue';
 export default {
   name: 'Header',
@@ -75,13 +76,11 @@ export default {
     return {
       visable: false,
       drawerVisable: false,
-      netError: false,
     };
   },
   async created() {
-    await initWeb3();
+    await MetaMask.setupNetwork();
     await this.init();
-    this.netError = this.chainId !== 56 && this.chainId !== 97;
   },
   computed: {
     path() {
@@ -101,13 +100,6 @@ export default {
     },
     NetErrorBtn() {
       return this.$store.state.NetErrorBtn;
-    },
-  },
-  watch: {
-    chainId(v) {
-      if (v == process.env.VUE_APP_NETWORK_ID) {
-        this.netError = false;
-      }
     },
   },
   methods: {

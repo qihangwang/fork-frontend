@@ -131,7 +131,7 @@ const setupNetwork = async () => {
               decimals: 18,
             },
             rpcUrls: nodes[process.env.VUE_APP_NETWORK_ID],
-            blockExplorerUrls: ['https://bscscan.com/'],
+            blockExplorerUrls: [process.env.VUE_APP_NETWORK_URL],
           },
         ],
       });

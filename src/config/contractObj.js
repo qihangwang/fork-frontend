@@ -65,4 +65,9 @@ export default {
     abi: UniswapV2RouterJSON,
     name: 'UniswapV2RouterJSON',
   },
+  ALPACA: {
+    address: EXPLORER_CONTRACT[networkId] ? EXPLORER_CONTRACT[networkId]['ALPACA'] : '',
+    abi: IERC20JSON,
+    name: 'ALPACA',
+  },
 };

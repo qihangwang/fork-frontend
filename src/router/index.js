@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store';
+import initWeb3 from '@/utils/web3';
 
 Vue.use(VueRouter);
 
@@ -35,13 +36,39 @@ const router = new VueRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+const getCurrentTime = async () => {
+  let time = await web3js.eth.getBlock('latest');
+  return time.timestamp;
+};
+
+router.beforeEach(async (to, from, next) => {
   window.scrollTo(0, 0);
   document.body.scrollTop = 0;
+
   document.documentElement.scrollTop = 0;
   store.commit('changeFromPage', from);
   store.commit('changeToPage', to);
-  next();
+
+  if (!window.web3js) {
+    initWeb3().then(async () => {
+      const currentTime = await getCurrentTime();
+      const endTime = new Date('2021-04-19T12:00:00.000+0000');
+      console.log(currentTime, endTime)
+      if (to.name !== 'Countdown' && endTime - currentTime * 1000 > 0) {
+        next('/countdown');
+      } else {
+        next();
+      }
+    });
+  } else {
+    const currentTime = await getCurrentTime();
+    const endTime = new Date('2021-04-19T12:00:00.000+0000');
+    if (to.name !== 'Countdown' && endTime - currentTime * 1000 > 0) {
+      next('/countdown');
+    } else {
+      next();
+    }
+  }
 });
 
 export default router;

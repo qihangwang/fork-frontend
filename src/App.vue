@@ -2,11 +2,11 @@
   <div id="app" :class="['white', { others: path !== '' }]">
     <el-container>
       <el-header>
-        <Header v-if="path != 'countdown'" />
+        <Header v-if="path != 'countdown' && routeView" />
       </el-header>
-      <el-container v-show="path == '/countdown' || accountLoad">
-        <el-aside width="180px" class="hidden-xs-only" v-if="path != '/countdown'">
-          <Aside :path="path" />
+      <el-container>
+        <el-aside width='180px' class="hidden-xs-only" v-if="routeView">
+          <Aside :path="path"  />
         </el-aside>
         <el-main class="route-content">
           <router-view :key="$route.fullPath" />
@@ -20,11 +20,17 @@
 <script>
 import Header from '@/components/Header';
 import Aside from '@/components/Aside';
+import initWeb3 from '@/utils/web3';
 export default {
   name: 'APP',
   components: {
     Header,
     Aside,
+  },
+  data() {
+    return {
+      routeView: false
+    }
   },
   computed: {
     path() {
@@ -33,6 +39,12 @@ export default {
     accountLoad() {
       return this.$store.state.accountLoad;
     },
+  },
+  async created() {
+    this.$router.onReady(() => {
+      this.routeView = true;
+    });
+    await initWeb3();
   },
 };
 </script>
