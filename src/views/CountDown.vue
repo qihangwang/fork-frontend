@@ -1,7 +1,17 @@
 <template>
   <div class="fixed">
     <div class="content">
-      <h2>Come Soon</h2>
+      <div class="logo-box">
+        <h1>FORK FINANCE</h1>
+      </div>
+      <div class="title-box">
+        <h2>Coming soon!</h2>
+      </div>
+      <div class="text-box">
+        A defi factory on Binance Smart Chain that produces
+defi-project in a yield farming way
+      </div>
+      
       <van-count-down :time="30 * 60 * 60 * 120">
         <template #default="timeData">
           <div class="inline">
@@ -25,10 +35,34 @@
           </div>
         </template>
       </van-count-down>
+      <div class="footer">
+        Stay tuned
+      </div>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
+.logo-box {
+  margin-top: 200px;
+    margin-bottom: 38px;
+  h1 {
+    font-size: 60px;
+    color: #fff;
+    font-weight: bold;
+    transform: scale(1.5);
+  }
+}
+.title-box{
+  margin-top: 30px;
+}
+.text-box{
+  color: #fff;
+    margin: 24px;
+}
+.footer{
+  color: #fff;
+    margin: 24px;
+}
 .fixed {
   position: fixed;
   left: 0;
@@ -36,7 +70,7 @@
   top: 0;
   bottom: 0;
   z-index: 1000;
-  background: #ccc;
+  background: #03a9f4;
 }
 .content {
   position: absolute;
@@ -67,11 +101,10 @@
 /deep/.van-count-down {
   margin: 100px auto;
   font-size: 60px;
-  color: #03a9f4;
+  color: #fff;
 }
 .block {
   display: inline-block;
-  background: #dcf4ff;
   padding: 40px 30px;
   border-radius: 20px;
   margin: 0 30px;
