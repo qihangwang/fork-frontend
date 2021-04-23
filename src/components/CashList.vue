@@ -69,7 +69,7 @@
                               :loading="!account && !accountLoad"
                               row-width="40"
                             >
-                              <span>{{ item.staked }}</span>
+                              <span> {{ item.staked > 0 ? Number(item.staked).toFixed(3) : 0 }}</span>
                             </van-skeleton>
                           </li>
                           <li>
@@ -81,8 +81,12 @@
                               row-width="40"
                             >
                               <span v-if="item.timeStatus == 0">0</span>
-                              <span v-else-if="item.timeStatus == 1">{{ item.claim }}</span>
-                              <span v-else>{{ item.realTimeClaim }}</span>
+                              <span v-else-if="item.timeStatus == 1">
+                                {{ item.claim > 0 ? Number(item.claim).toFixed(3) : 0 }}
+                              </span>
+                              <span v-else>
+                                {{ item.realTimeClaim > 0 ? Number(item.realTimeClaim).toFixed(3) : 0 }}</span
+                              >
                             </van-skeleton>
                           </li>
                         </ul>
@@ -284,7 +288,7 @@ export default {
       await contract.call('cashPoolLength', false, function(err, res) {
         if (!err) {
           that.poolsLength = res;
-          console.log(res)
+          console.log(res);
         }
       });
       const arr = [];
@@ -318,7 +322,7 @@ export default {
               obj.timeStatus = 2; //finshed
             }
             arr.push(obj);
-            console.log(1)
+            console.log(1);
           }
         });
       }
@@ -337,7 +341,7 @@ export default {
         const res = await contract.allowance(this.account, pools.address, function(err, result) {
           if (!err) {
             const approveVal = Number(web3js.utils.fromWei(result, 'ether'));
-            console.log(approveVal)
+            console.log(approveVal);
             return approveVal;
           } else {
             return 0;
@@ -560,7 +564,7 @@ i {
     padding: 24px;
     font-size: 18px;
     color: #000;
-    font-weight: bold;
+    // font-weight: bold;
     display: flex;
     justify-content: space-between;
     background-color: #f5f7fa;

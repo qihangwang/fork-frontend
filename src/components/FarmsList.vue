@@ -676,7 +676,7 @@ export default {
     padding-bottom: 10px;
     font-weight: bold;
     font-size: 16px;
-    color: #1fc7d4;
+    color: #000;
     border-bottom: 1px solid #e9eaeb;
     margin-bottom: 10px;
   }
@@ -684,10 +684,11 @@ export default {
     padding: 10px;
   }
   /deep/.el-collapse-item__wrap {
-    background: rgba(32, 148, 240, 0.38);
+    background: #fff;
     padding: 0px 10px;
-    border-radius: 23px;
+    border-radius: 10px;
     margin-bottom: 10px;
+    border: 1px solid #ebeef5;
   }
 }
 .project-box {
