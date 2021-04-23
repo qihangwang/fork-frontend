@@ -57,7 +57,7 @@
         <div class="footer" v-show="loaded">
           <p>
             © 2021 — fork-finance.org
-             <!-- <span class="love"> ♥︎ </span> by <a href="#">Finance</a> -->
+            <!-- <span class="love"> ♥︎ </span> by <a href="#">Finance</a> -->
           </p>
         </div>
       </div>
@@ -83,16 +83,27 @@ export default {
   },
   async created() {
     await this.getCurrentTime();
-    this.loadImage();
+    this.loadImages();
   },
   methods: {
-    loadImage() {
-      const url = 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg';
-      const image = new Image();
-      image.src = url;
-      image.onload = () => {
+    loadImages() {
+      let mulitImg = ['https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg6.jpg'];
+      let promiseAll = [],
+        img = [],
+        imgTotal = mulitImg.length;
+      for (let i = 0; i < imgTotal; i++) {
+        promiseAll[i] = new Promise(resolve => {
+          img[i] = new Image();
+          img[i].src = mulitImg[i];
+          img[i].onload = function() {
+            resolve(img[i]);
+          };
+        });
+      }
+      Promise.all(promiseAll).then(() => {
+        //全部加载完成
         this.loaded = true;
-      };
+      });
     },
     async getCurrentTime() {
       let time = await web3js.eth.getBlock('latest');
@@ -170,7 +181,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 100000;
-  background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg') no-repeat;
+  background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg6.jpg') no-repeat;
   background-size: 100% 100%;
 }
 .content {
@@ -260,6 +271,7 @@ export default {
   }
   .wrap {
     background-size: cover;
+    background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg6.jpg');
   }
 }
 @media only screen and (max-width: 767px) {
