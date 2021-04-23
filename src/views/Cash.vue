@@ -29,6 +29,7 @@ export default {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+    font-family: 'element-icons';
   }
   &-desc {
     color: #607d8b;
