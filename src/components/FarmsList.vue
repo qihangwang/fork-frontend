@@ -54,12 +54,10 @@
                 <div class="model-pan">
                   <div class="solo-title">
                     <span>CHECK</span>
-                    <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
-                      <span>Earned</span>
-                    </van-skeleton>
+                    <span>Earned</span>
                   </div>
                   <div class="base-flex base-flex-item-lits">
-                    <van-skeleton class="m-skeleton" :row="1" :loading="!account" row-width="40">
+                    <van-skeleton class="m-skeleton" :row="1" :loading="!account || accountChange" row-width="100">
                       <div class="base-flex-content bold-num">
                         {{ item.rewards > 0 ? Number(item.rewards).toFixed(3) : 0 }}
                       </div>
@@ -83,7 +81,7 @@
                     </div>
                   </div>
                   <div class="solo-title">
-                    <span>{{ item.pool.name }} LP</span>
+                    <span>{{ item.pool.name }} <template v-if="item.token">LP</template></span>
                     <span>Staked</span>
                   </div>
                   <template>
@@ -97,10 +95,10 @@
                       <span class="bold-num">{{ item.staked > 0 ? Number(item.staked).toFixed(3) : 0 }}</span>
                       <el-button
                         v-if="item.staked == 0"
+                        v-html="item.token ? 'Stake LP' : 'Stake'"
                         type="primary custom-border"
                         @click="changeModel('Stake', item)"
-                        >Stake LP</el-button
-                      >
+                      ></el-button>
                       <div v-else>
                         <el-button type="info" plain class="gray-butn add" @click="changeModel('Unstake', item)">
                           -
@@ -212,6 +210,7 @@ export default {
       activeItem: {},
       timer: null,
       walletVisable: false,
+      accountChange: false,
     };
   },
   computed: {
@@ -244,6 +243,7 @@ export default {
   watch: {
     account(v) {
       if (!this.chainIdError && v) {
+        this.accountChange = true;
         this.AccountFn();
       }
     },
@@ -269,6 +269,7 @@ export default {
         await this.checkAllowance();
         await this.getStakedVal();
         await this.getForkReward();
+        this.accountChange = false;
         this.update();
       }
     },
@@ -376,13 +377,15 @@ export default {
       const pool = this.contracts.ForkFarm;
       const contract = new Contract(pool.abi, pool.address, pool.name);
       for (let i = 0; i < this.list.length; i++) {
+        const item = that.list[i];
         if (this.list[i].status !== 0) {
           await contract.call('pendingCheck', [i, this.account], { from: this.account }, function(err, res) {
             if (!err) {
-              const item = that.list[i];
               item.rewards = web3js.utils.fromWei(res, 'ether');
             }
           });
+        } else {
+          item.rewards = 0;
         }
       }
       this.computeSum();

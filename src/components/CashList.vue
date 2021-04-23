@@ -32,8 +32,8 @@
                       </div>
                       <div class="card-wrap">
                         <div class="status-wrap">
-                          <van-count-down :time="item.time">
-                            <template #default="timeData" @finish="finishTime(item)">
+                          <van-count-down :time="item.time"  @finish="finishTime(item)">
+                            <template #default="timeData">
                               <span
                                 class="block"
                                 v-html="timeData.hours < 10 ? `0${timeData.hours}` : timeData.hours"
@@ -56,10 +56,10 @@
                             <span>Total FORK:</span><span>{{ item.cashTotal }}</span>
                           </li>
                           <li>
-                            <span>CHECK deposited:</span><span>{{ item.stakeTotal }}</span>
+                            <span>CHECK deposited:</span><span>{{ transNum(item.stakeTotal) }}</span>
                           </li>
                           <li>
-                            <span>CHECK to burn:</span><span>{{ item.stakeTotal }}</span>
+                            <span>CHECK to burn:</span><span>{{ transNum(item.stakeTotal) }}</span>
                           </li>
                           <li>
                             <span>CHECK you deposited:</span>
@@ -69,7 +69,7 @@
                               :loading="!account && !accountLoad"
                               row-width="40"
                             >
-                              <span> {{ item.staked > 0 ? Number(item.staked).toFixed(3) : 0 }}</span>
+                              <span> {{ transNum(item.staked) }}</span>
                             </van-skeleton>
                           </li>
                           <li>
@@ -82,11 +82,9 @@
                             >
                               <span v-if="item.timeStatus == 0">0</span>
                               <span v-else-if="item.timeStatus == 1">
-                                {{ item.claim > 0 ? Number(item.claim).toFixed(3) : 0 }}
+                                {{ transNum(item.claim) }}
                               </span>
-                              <span v-else>
-                                {{ item.realTimeClaim > 0 ? Number(item.realTimeClaim).toFixed(3) : 0 }}</span
-                              >
+                              <span v-else> {{ transNum(item.realTimeClaim) }}</span>
                             </van-skeleton>
                           </li>
                         </ul>
@@ -255,6 +253,13 @@ export default {
     }
   },
   methods: {
+    transNum(val) {
+      if (val > 0) {
+        return Number(val).toFixed(3);
+        // return Number(val).toLocaleString('en-US');
+      }
+      return 0;
+    },
     async init() {
       this.skeletonLoading = true;
       await this.getPools();
@@ -322,7 +327,6 @@ export default {
               obj.timeStatus = 2; //finshed
             }
             arr.push(obj);
-            console.log(1);
           }
         });
       }
@@ -618,6 +622,9 @@ i {
     font-weight: 400;
     > span:first-child {
       color: #000;
+    }
+    > span:last-child {
+      font-size: 16px;
     }
   }
 }

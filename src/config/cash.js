@@ -18,7 +18,7 @@ const Project = {
   },
 };
 
-const SubTitle = ['FORK 1st Cash event', 'FORK 2nd Cash event', 'FORK 3th Cash event'];
+const SubTitle = ['FORK 1st Cash event', 'FORK 2nd Cash event', 'FORK 3rd Cash event', 'FORK 4th Cash event', 'FORK 5th Cash event'];
 
 export default {
   Project: Project,

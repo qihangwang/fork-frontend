@@ -87,6 +87,12 @@ module.exports = {
     if (process.env.use_analyzer) {
       config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
     }
+    if (process.env.NODE_ENV == 'production') {
+      config.optimization.minimizer('terser').tap(args => {
+        args[0].terserOptions.compress.drop_console = true;
+        return args;
+      });
+    }
   },
 
   devServer: {
