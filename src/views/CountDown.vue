@@ -12,8 +12,8 @@
           >
           <van-swipe-item class="item">
             <h3>
-              Staking LP to<br />
-              Earn CHECK Token
+              Staking LP/FORK/BUSD/...<br />
+              to Earn CHECK Token
             </h3></van-swipe-item
           >
           <van-swipe-item class="item">
@@ -52,10 +52,13 @@
             </div>
           </template>
         </van-count-down>
-        <p class="text-box">OUR WEBSITE IS COMING SOON</p>
+        <p class="text-box">OUR FARM IS COMING SOON</p>
         <el-button v-if="finshed && loaded" @click="linkTo" type="success" icon="el-icon-right" circle></el-button>
         <div class="footer" v-show="loaded">
-          <p>© 2021 — Made with <span class="love"> ♥︎ </span> by <a href="#">Finance</a></p>
+          <p>
+            © 2021 — fork-finance.org
+             <!-- <span class="love"> ♥︎ </span> by <a href="#">Finance</a> -->
+          </p>
         </div>
       </div>
     </div>
@@ -84,7 +87,7 @@ export default {
   },
   methods: {
     loadImage() {
-      const url = 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Desert.jpg';
+      const url = 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg';
       const image = new Image();
       image.src = url;
       image.onload = () => {
@@ -167,7 +170,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 100000;
-  background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Desert.jpg') no-repeat;
+  background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg') no-repeat;
   background-size: 100% 100%;
 }
 .content {
