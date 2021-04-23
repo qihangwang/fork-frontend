@@ -255,7 +255,7 @@ export default {
   methods: {
     transNum(val) {
       if (val > 0) {
-        return Number(val).toFixed(3);
+        return Number(val).toFixed(4);
         // return Number(val).toLocaleString('en-US');
       }
       return 0;

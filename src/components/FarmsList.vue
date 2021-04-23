@@ -59,7 +59,7 @@
                   <div class="base-flex base-flex-item-lits">
                     <van-skeleton class="m-skeleton" :row="1" :loading="!account || accountChange" row-width="100">
                       <div class="base-flex-content bold-num">
-                        {{ item.rewards > 0 ? Number(item.rewards).toFixed(3) : 0 }}
+                        {{ item.rewards > 0 ? Number(item.rewards).toFixed(4) : 0 }}
                       </div>
                     </van-skeleton>
                     <div class="flex-item-end base-flex-number">
@@ -92,7 +92,7 @@
                       Approve
                     </el-button>
                     <div v-else class="stake-line">
-                      <span class="bold-num">{{ item.staked > 0 ? Number(item.staked).toFixed(3) : 0 }}</span>
+                      <span class="bold-num">{{ item.staked > 0 ? Number(item.staked).toFixed(4) : 0 }}</span>
                       <el-button
                         v-if="item.staked == 0"
                         v-html="item.token ? 'Stake LP' : 'Stake'"
