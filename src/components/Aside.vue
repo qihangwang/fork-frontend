@@ -15,31 +15,37 @@
     <el-divider></el-divider>
     <div class="fixed-link">
       <el-col :span="24" class="item">
-        <a href="https://twitter.com/ForkFinance">
+        <a href="https://twitter.com/ForkFinance" target="_balnk">
           <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/twitter.png" />
           <span>Twitter</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a href="https://t.me/forkfinance">
+        <a href="https://t.me/forkfinance" target="_balnk">
           <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Telegram.png" />
           <span>Telegram</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a href="https://fork-finance.medium.com/">
+        <a href="https://fork-finance.medium.com/" target="_balnk">
           <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/medium.png" />
           <span>Medium</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a href="https://docs.fork-finance.org/">
+        <a href="https://github.com/fork-finance/" target="_balnk">
+          <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/Logo GitHub.png" />
+          <span>github</span>
+        </a>
+      </el-col>
+      <el-col :span="24" class="item">
+        <a href="https://docs.fork-finance.org/" target="_balnk">
           <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/docs.png" />
           <span>Docs</span>
         </a>
       </el-col>
       <el-col :span="24" class="item">
-        <a href="https://t.me/forkfinance_announcement">
+        <a href="https://t.me/forkfinance_announcement" target="_balnk">
           <img src="https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/mes.png" />
           <span>Announcement</span>
         </a>

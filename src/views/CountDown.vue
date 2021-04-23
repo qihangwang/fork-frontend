@@ -93,7 +93,7 @@ export default {
     },
     async getCurrentTime() {
       let time = await web3js.eth.getBlock('latest');
-      const end = new Date('2021-04-24T12:00:00.000+0000').getTime();
+      const end = new Date(process.env.VUE_APP_ACTIVE_TIME).getTime();
       this.timestamp = end - time.timestamp * 1000 < 0 ? 0 : end - time.timestamp * 1000;
     },
     finshedFn() {

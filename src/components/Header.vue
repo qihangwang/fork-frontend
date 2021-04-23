@@ -79,7 +79,9 @@ export default {
     };
   },
   async created() {
-    await MetaMask.setupNetwork();
+    if (this.path != '/countdown') {
+      await MetaMask.setupNetwork();
+    }
     await this.init();
   },
   computed: {

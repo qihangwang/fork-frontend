@@ -52,8 +52,7 @@ router.beforeEach(async (to, from, next) => {
   if (!window.web3js) {
     initWeb3().then(async () => {
       const currentTime = await getCurrentTime();
-      const endTime = new Date('2021-04-19T12:00:00.000+0000');
-      console.log(currentTime, endTime)
+      const endTime = new Date(process.env.VUE_APP_ACTIVE_TIME);
       if (to.name !== 'Countdown' && endTime - currentTime * 1000 > 0) {
         next('/countdown');
       } else {
@@ -62,7 +61,7 @@ router.beforeEach(async (to, from, next) => {
     });
   } else {
     const currentTime = await getCurrentTime();
-    const endTime = new Date('2021-04-19T12:00:00.000+0000');
+    const endTime = new Date(process.env.VUE_APP_ACTIVE_TIME);
     if (to.name !== 'Countdown' && endTime - currentTime * 1000 > 0) {
       next('/countdown');
     } else {
