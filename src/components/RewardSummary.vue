@@ -165,6 +165,7 @@ export default {
 .sum-title {
   font-size: 24px;
   font-weight: bold;
+  font-family: 'element-icons';
 }
 .card-flex {
   display: flex;

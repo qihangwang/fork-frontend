@@ -1,16 +1,15 @@
 /* devanagari */
-// @font-face {
-//     font-family: 'Poppins';
-//     font-style: italic;
-//     font-weight: 400;
-//     src: url(../assets/fonts/pxiByp8kv8JHgFVrLCz7Z11lFd2JQEl8qw.woff2) format('woff2');
-//   }
-// @font-face {
-//     font-family: "Poppins";
-//     font-style: italic;
-//     font-weight: 400;
-//     src: url(../assets/fonts/italic-font.ttf) format("truetype")
-// }
+@font-face {
+  font-family: 'SF-UI-Text-Regular';
+
+  font-weight: normal;
+  src: url('../assets/fonts/SF-UI-Text-Regular.otf') format('opentype');
+}
+@font-face {
+  font-family: 'SF-UI-Text-Regular';
+  font-weight: bold;
+  src: url('../assets/fonts/SF-UI-Text-Semibold.otf') format('opentype');
+}
 @font-face {
   font-family: "Kanit";
   font-style: normal;
@@ -22,12 +21,12 @@
   font-family: "Kanit";
   font-style: normal;
   font-weight: 700;
-  src: url(../assets/fonts/kanit.woff2) format("woff2")
+  src: url(../assets/fonts/kanit_semibold.woff2) format("woff2")
 }
 
 
 #app {
-  font-family: Kanit, 'element-icons';
+  font-family: 'element-icons', 'SF-UI-Text-Regular';
 }
 
 html,

@@ -560,7 +560,7 @@ i {
     padding: 24px;
     font-size: 18px;
     color: #000;
-    font-weight: bold;
+    // font-weight: bold;
     display: flex;
     justify-content: space-between;
     background-color: #f5f7fa;
