@@ -36,7 +36,6 @@ export const getPriceBusd = async type => {
   const WBNB = contracts.WBNB;
   const BUSD = contracts.BUSD;
   const contract = new Contract(current.abi, current.address, current.name);
-  console.log(target.name)
   if (target.address == BUSD.address) {
     return 1;
   }

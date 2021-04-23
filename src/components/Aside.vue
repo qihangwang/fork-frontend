@@ -54,7 +54,12 @@
         <el-col :span="24" class=" fork">
           <img src="https://fork-finance.org/ico_lg_1_64@2x.png" />
           <span>${{ price }}</span>
-          <a class="buy">Buy</a>
+          <a
+            href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xa9044F45039B798D21E02CB77F396A2d387cACdD"
+            target="_blank"
+            class="buy"
+            >Buy</a
+          >
         </el-col>
       </div>
     </div>

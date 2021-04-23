@@ -258,6 +258,9 @@ export default {
       font-size: 36px;
     }
   }
+  .wrap {
+    background-size: cover;
+  }
 }
 @media only screen and (max-width: 767px) {
   .inline {
