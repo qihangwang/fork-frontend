@@ -161,7 +161,7 @@ const FarmProject = {
           name: 'BNB',
           icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bnb.png',
           quoteToken: {
-            name: 'BNB',
+            name: 'WBNB',
             address: EXPLORER_CONTRACT[networkId]['WBNB'],
           },
         },

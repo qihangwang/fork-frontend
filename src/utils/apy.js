@@ -32,7 +32,12 @@ export const getPriceBusd = async type => {
   const ZERO = new BigNumber(0);
   const COUNT = new BigNumber(10).pow(18);
   const current = contracts.UniswapV2Router;
-  const target = contracts[type];
+  let target;
+  if (type == 'BNB') {
+    target = contracts['WBNB'];
+  } else {
+    target = contracts[type];
+  }
   const WBNB = contracts.WBNB;
   const BUSD = contracts.BUSD;
   const contract = new Contract(current.abi, current.address, current.name);

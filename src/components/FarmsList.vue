@@ -421,7 +421,7 @@ export default {
         const quoteTokenBalanceLP = await quotaContract.call('balanceOf', this.list[i].stakeToken);
 
         // 2 comput lpTotalInQuoteToken
-        try {
+        // try {
           if (totalSupply) {
             const lpTotalSupply = web3js.utils.fromWei(totalSupply, 'ether');
             // lp
@@ -445,9 +445,9 @@ export default {
             this.list[i].apy = apy ? apy.toFixed(2) : 0;
             this.list[i].totalUsdt = totalUsdt.toFixed(4);
           }
-        } catch (err) {
-          console.log(err);
-        }
+        // } catch (err) {
+        //   console.log(err);
+        // }
       }
     },
     // approve
