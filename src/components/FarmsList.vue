@@ -305,7 +305,6 @@ export default {
             if (!err) {
               const project = FarmProject[res.projectId];
               res.project = project;
-              // const project = FarmProject[res.projectId];
               if (typeof project.pools[index] == 'undefined') return;
               res.pool = project ? project.pools[index] : undefined;
               res.quoteToken = project ? project.pools[index]['quoteToken'] : undefined;
@@ -321,6 +320,9 @@ export default {
                 rewards: 0,
                 index,
               };
+              if (res.allocPoint == 0) {
+                return false;
+              }
               arr.push(obj);
             }
           });
@@ -393,7 +395,7 @@ export default {
     // four
     async getApys() {
       for (let i = 0; i < this.list.length; i++) {
-        if (this.list[i].allocPoint == 0 || this.list[i].quoteToken.name == 'ALPACA') {
+        if (this.list[i].allocPoint == 0) {
           return false;
         }
         // 1. comput poolWeight

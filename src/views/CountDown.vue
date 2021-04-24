@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     loadImages() {
-      let mulitImg = ['https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg6.jpg'];
+      let mulitImg = ['https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg'];
       let promiseAll = [],
         img = [],
         imgTotal = mulitImg.length;
@@ -181,7 +181,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 100000;
-  background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg6.jpg') no-repeat;
+  background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg') no-repeat;
   background-size: 100% 100%;
 }
 .content {
@@ -271,7 +271,7 @@ export default {
   }
   .wrap {
     background-size: cover;
-    background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg6.jpg');
+    background: url('https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bg.jpg');
   }
 }
 @media only screen and (max-width: 767px) {

@@ -17,12 +17,10 @@ const FarmProject = {
       },
       coin: 'FORK',
       desc: 'A defi factory on Binance Smart Chain that produces defi-project in a yield farming way',
-      start: '2020-04-01',
-      end: '2020-04-30',
       pools: {
         '0': {
           name: 'FORK-BNB-LP',
-          icon: 'https://i.loli.net/2021/04/10/cv258anKxRmDLlE.png',
+          icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/fork-bnb.png',
           token: {
             name: 'FORK',
             address: EXPLORER_CONTRACT[networkId]['FORK'],
@@ -97,7 +95,7 @@ const FarmProject = {
       pools: {
         '0': {
           name: 'FORK-BNB-LP',
-          icon: 'https://i.loli.net/2021/04/10/cv258anKxRmDLlE.png',
+          icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/fork-bnb.png',
           token: {
             name: 'FORK',
             address: EXPLORER_CONTRACT[networkId]['FORK'],
