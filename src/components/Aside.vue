@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       activeIndex: '',
-      price: '',
+      price: 'N/A',
     };
   },
   computed: {
@@ -86,13 +86,25 @@ export default {
       return this.path;
     },
   },
+  watch: {
+    chainIdError(status) {
+      if (!status) {
+        this.getPrice();
+      }
+    },
+  },
   async created() {
-    const price = await getPriceBusd('FORK');
-    if (Number(price) > 1) {
-      this.price = Number(price).toFixed(2);
-    } else {
-      this.price = Number(price).toFixed(4);
-    }
+    await this.getPrice();
+  },
+  methods: {
+    async getPrice() {
+      const price = await getPriceBusd('FORK');
+      if (Number(price) > 1) {
+        this.price = Number(price).toFixed(2);
+      } else {
+        this.price = Number(price).toFixed(4);
+      }
+    },
   },
 };
 </script>

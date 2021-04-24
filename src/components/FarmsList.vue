@@ -118,10 +118,14 @@
                       </div>
                       <div class="goLink">
                         <a
-                          href="https://exchange.pancakeswap.finance/#/add/BNB/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"
+                          :href="
+                            item.token
+                              ? `https://exchange.pancakeswap.finance/#/${item.quoteToken.address}/${item.token.address}`
+                              : `https://exchange.pancakeswap.finance/#/swap?outputCurrency=${item.quoteToken.address}`
+                          "
                           target="_blank"
                         >
-                          <span>GET {{ item.pool.name }} LP</span>
+                          <span>GET {{ item.pool.name }} </span>
                           <i class="el-icon-top-right"></i>
                         </a>
                       </div>

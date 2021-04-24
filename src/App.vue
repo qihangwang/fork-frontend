@@ -5,11 +5,11 @@
         <Header v-if="path != 'countdown' && routeView" />
       </el-header>
       <el-container>
-        <el-aside width='180px' class="hidden-xs-only" v-if="routeView">
-          <Aside :path="path"  />
+        <el-aside width="180px" class="hidden-xs-only" v-if="routeView">
+          <Aside :path="path" />
         </el-aside>
         <el-main class="route-content">
-          <router-view :key="$route.fullPath" />
+          <router-view />
           <div class="blank"></div>
         </el-main>
       </el-container>
@@ -29,8 +29,8 @@ export default {
   },
   data() {
     return {
-      routeView: false
-    }
+      routeView: false,
+    };
   },
   computed: {
     path() {

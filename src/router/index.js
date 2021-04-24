@@ -62,6 +62,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     const currentTime = await getCurrentTime();
     const endTime = new Date(process.env.VUE_APP_ACTIVE_TIME);
+    console.log(endTime - currentTime * 1000)
     if (to.name !== 'Countdown' && endTime - currentTime * 1000 > 0) {
       next('/countdown');
     } else {

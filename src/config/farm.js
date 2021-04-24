@@ -74,6 +74,14 @@ const FarmProject = {
             address: EXPLORER_CONTRACT[networkId]['ALPACA'],
           },
         },
+        '6': {
+          name: 'BNB',
+          icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bnb.png',
+          quoteToken: {
+            name: 'BNB',
+            address: EXPLORER_CONTRACT[networkId]['WBNB'],
+          },
+        },
       },
     },
   },
@@ -139,6 +147,22 @@ const FarmProject = {
           quoteToken: {
             name: 'BUSD',
             address: EXPLORER_CONTRACT[networkId]['BUSD'],
+          },
+        },
+        '5': {
+          name: 'ALPACA',
+          icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/alpaca1.png',
+          quoteToken: {
+            name: 'ALPACA',
+            address: EXPLORER_CONTRACT[networkId]['ALPACA'],
+          },
+        },
+        '6': {
+          name: 'BNB',
+          icon: 'https://fork-images.oss-cn-hongkong.aliyuncs.com/fork/bnb.png',
+          quoteToken: {
+            name: 'BNB',
+            address: EXPLORER_CONTRACT[networkId]['WBNB'],
           },
         },
       },
